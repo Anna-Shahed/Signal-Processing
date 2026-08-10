@@ -1,1 +1,115 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
 
+[project]
+name = "signal-processing"
+version = "0.1.0"
+description = "A modular scientific signal-processing toolkit and interactive laboratory."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Signal Processing Laboratory Contributors" }
+]
+keywords = [
+    "signal processing",
+    "dsp",
+    "fourier",
+    "fft",
+    "spectral analysis",
+    "filtering",
+    "scientific computing"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering"
+]
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pandas>=2.1",
+    "matplotlib>=3.8",
+    "plotly>=5.18",
+    "PyWavelets>=1.5",
+    "soundfile>=0.12",
+    "streamlit>=1.29"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "hypothesis>=6.92",
+    "ruff>=0.3",
+    "mypy>=1.8",
+    "pre-commit>=3.6",
+    "types-setuptools>=69"
+]
+all = [
+    "signal-processing[dev]"
+]
+
+[project.scripts]
+signal-process = "signal_processing.cli.main:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".venv",
+    "build",
+    "dist"
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["signal_processing"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src"]
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config --cov=signal_processing --cov-report=term-missing"
+markers = [
+    "slow: tests that intentionally exercise slower educational algorithms",
+    "integration: tests spanning multiple package subsystems",
+    "property: property-based tests"
+]
+
+[tool.coverage.run]
+branch = true
+source = ["signal_processing"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError"
+]
