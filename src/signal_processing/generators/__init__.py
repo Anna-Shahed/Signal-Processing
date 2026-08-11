@@ -1,24 +1,39 @@
-"""Signal-generation public API."""
+import numpy as np
 
-from .chirp import linear_chirp, logarithmic_chirp, quadratic_chirp
-from .composite import composite, mix
-from .noise import gaussian_noise, pink_noise, uniform_noise, white_noise
-from .sinusoidal import cosine, sine
-from .waveforms import sawtooth, square, triangle
+from signal_processing.generators import composite, sine, white_noise
+from signal_processing.transforms import (
+    dft,
+    fft,
+    fft_radix2_educational,
+    ifft,
+    stft,
+)
 
-__all__ = [
-    "composite",
-    "cosine",
-    "gaussian_noise",
-    "linear_chirp",
-    "logarithmic_chirp",
-    "mix",
-    "pink_noise",
-    "quadratic_chirp",
-    "sawtooth",
-    "sine",
-    "square",
-    "triangle",
-    "uniform_noise",
-    "white_noise",
-]
+tone = sine(
+    frequency=440,
+    amplitude=1.0,
+    duration=2.0,
+    sampling_rate=4_000,
+)
+
+noise = white_noise(
+    duration=2.0,
+    sampling_rate=4_000,
+    amplitude=0.05,
+    seed=42,
+)
+
+signal = composite(tone, noise)
+
+spectrum = fft(signal, one_sided=True)
+reconstructed = ifft(spectrum)
+
+educational_fft = fft_radix2_educational(signal.samples[:1024])
+educational_dft = dft(signal.samples[:128])
+
+spectrogram = stft(
+    signal,
+    nperseg=256,
+    hop_length=128,
+    window="hann",
+)
