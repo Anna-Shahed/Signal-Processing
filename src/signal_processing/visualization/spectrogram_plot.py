@@ -15,8 +15,7 @@ def plot_spectrum(
     figsize: tuple[float, float] = (10, 3.6),
 ):
     """Plot magnitude, phase, or power on black.
-
-    dB references are explicit: magnitude uses 20*log10(|X|),
+ explicit: magnitude uses 20*log10(|X|),
     power uses 10*log10(|X|^2). Phase is unwrapped.
     """
     use_editorial_style()
