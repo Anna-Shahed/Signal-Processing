@@ -15,7 +15,6 @@ DEFAULTS = {
     "project": None,
 }
 
-
 def init_state() -> None:
     for key, value in DEFAULTS.items():
         st.session_state.setdefault(key, value)
@@ -23,7 +22,6 @@ def init_state() -> None:
 
 def get(key: str):
     return st.session_state.get(key)
-
 
 def set(key: str, value) -> None:
     st.session_state[key] = value
