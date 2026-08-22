@@ -1,4 +1,3 @@
-"""Signal Lab — the instrument: source rail | time+frequency | analysis panel."""
 
 from __future__ import annotations
 
