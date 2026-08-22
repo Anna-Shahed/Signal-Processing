@@ -1,7 +1,3 @@
-"""Shared editorial Matplotlib style for exported figures.
-
-from __future__ import annotations
-
 import matplotlib as mpl
 
 from .theme import (
