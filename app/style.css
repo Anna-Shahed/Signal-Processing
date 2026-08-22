@@ -25,7 +25,6 @@
 }
 [data-testid="stMain"] { padding-top: 0; }
 
-/* ---------- base typography --------------------------------------------- */
 html, body, .stApp, p, span, label, div {
   font-family: var(--sans);
   color: var(--ink);
@@ -38,7 +37,6 @@ a:hover { color: var(--ink); border-bottom-color: var(--ink-2); }
 ::selection { background: #2a2a30; color: var(--ink); }
 ::-moz-selection { background: #2a2a30; color: var(--ink); }
 
-/* thin scrollbars */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: #1e1e24; border-radius: 0; }
 ::-webkit-scrollbar-track { background: #000; }
