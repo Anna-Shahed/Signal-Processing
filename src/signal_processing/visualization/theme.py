@@ -135,7 +135,7 @@ def apply_editorial_theme(fig: go.Figure) -> go.Figure:
     """Flat, mono-font, near-black layout — the 'editor/terminal' look.
 
     Matches the original theme but pulls colors from MIDNIGHT so the
-    whole module stays consistent.
+    whole module stays consistent
     """
     fig.update_layout(
         plot_bgcolor=MIDNIGHT["background"],
