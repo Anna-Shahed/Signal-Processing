@@ -1,5 +1,3 @@
-"""Session-state store — one place where the instrument's state lives."""
-
 from __future__ import annotations
 
 import streamlit as st
