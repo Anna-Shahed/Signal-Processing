@@ -20,7 +20,6 @@ from signal_processing.visualization.plotly_template import (
 
 WAVEFORMS = ["sine", "square", "chirp", "sine + noise"]
 
-
 def _generate(kind: str, fs: float, duration: float) -> None:
     if kind == "sine":
         sig = sine(440.0, amplitude=1.0, duration=duration, sampling_rate=fs)
