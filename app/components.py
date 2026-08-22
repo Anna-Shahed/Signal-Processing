@@ -10,10 +10,8 @@ LABELS = {
     "analysis": "Analysis", "docs": "Documentation",
 }
 
-
 def _html(html: str) -> None:
     st.markdown(html, unsafe_allow_html=True)
-
 
 def render_top_nav() -> None:
     active = st.session_state.get("route", "lab")
@@ -34,7 +32,6 @@ def render_top_nav() -> None:
                 st.rerun()
     _html('<div class="sp-rule"></div>')
 
-
 def section_header(title: str) -> None:
     """Thin rule with an uppercase mono label — the only 'box' we use."""
     _html(f'<div class="sp-section"><span>{title}</span><i></i></div>')
@@ -49,10 +46,8 @@ def readout(label: str, value: str, unit: str = "", alert: bool = False) -> None
         f"</div>"
     )
 
-
 def led(state: str) -> str:
     return f'<span class="sp-led sp-led-{state}"></span>'
-
 
 def pipeline_bar(stages: list[str] | None = None) -> None:
     """INPUT -> PROCESS -> ANALYZE -> RESULT with stage chips below."""
