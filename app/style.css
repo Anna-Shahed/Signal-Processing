@@ -1,23 +1,4 @@
 
-.sp-pipeline { display: flex; align-items: center; gap: 0; margin: 0.4rem 0 0.6rem; }
-.sp-pipe-node { font-family: var(--mono); font-size: 10px;
-                letter-spacing: 0.22em; color: var(--ink-2);
-                padding: 0.25rem 0.9rem; border: 1px solid var(--hairline-strong);
-                background: var(--bg-raised); }
-.sp-pipe-node:first-child { color: var(--ink); }
-.sp-pipe-arrow { flex: 1; height: 1px; background: var(--hairline-strong);
-                 position: relative; min-width: 1.5rem; }
-.sp-pipe-arrow::after { content: ""; position: absolute; right: 0; top: -2px;
-                        border: 2px solid var(--hairline-strong);
-                        border-left: none; border-bottom: none; width: 4px; height: 4px;
-                        transform: rotate(45deg); }
-.sp-stage-row { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem;
-                margin: 0 0 0.4rem; }
-.sp-stage { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
-            color: var(--ink-2); text-transform: uppercase; }
-.sp-stage .sp-led { margin-right: 0.45rem; }
-
-/* status LEDs — flat, not neon */
 .sp-led { display: inline-block; width: 6px; height: 6px; border-radius: 50%;
           vertical-align: middle; }
 .sp-led-idle   { background: #26262c; }
