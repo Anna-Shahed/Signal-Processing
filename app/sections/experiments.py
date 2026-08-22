@@ -17,7 +17,6 @@ from signal_processing.generators import composite, sine, white_noise
 RESULTS_DIR = Path("benchmarks/results")
 SWEEP_PARAMS = ["frequency", "noise_amplitude", "duration"]
 
-
 def _run_one(frequency: float, noise: float, fs: float,
              duration: float, seed: int) -> dict:
     tone = sine(frequency, amplitude=1.0, duration=duration, sampling_rate=fs)
@@ -34,10 +33,7 @@ def _run_one(frequency: float, noise: float, fs: float,
         "crest_factor": m.get("crest_factor", float("nan")),
     }
 
-
 def _table_html(rows: list[dict], columns: list[str]) -> str:
-    """Hairline mono table — the `.sp-table` rule lives here so the file is
-    self-contained; optionally move it into app/styles.css."""
     head = "".join(f"<th>{c.replace('_', ' ')}</th>" for c in columns)
     body = ""
     for r in rows:
