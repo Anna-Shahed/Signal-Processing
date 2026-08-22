@@ -52,7 +52,6 @@ def _table_html(rows: list[dict], columns: list[str]) -> str:
         f"<tbody>{body}</tbody></table>"
     )
 
-
 def render() -> None:
     ui.section_header("Parameters")
     c1, c2, c3 = st.columns(3)
