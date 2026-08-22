@@ -1,14 +1,3 @@
-"""Signal Processing Laboratory — Streamlit entry point.
-
-Run with:
-    streamlit run app/main.py
-or:
-    signal-process lab
-
-Pages are auto-discovered from ``app/pages/``. The Midnight theme is
-injected here and shared by every page.
-"""
-
 from __future__ import annotations
 
 import streamlit as st
@@ -80,13 +69,11 @@ code, pre {{ font-family: 'JetBrains Mono', monospace; color: {MIDNIGHT['accent_
 
 st.markdown(f"<style>{CSS}</style>", unsafe_allow_html=True)
 
-# ---------------------------------------------------------------- session
 if "sig" not in st.session_state:
     st.session_state["sig"] = sine(440.0, amplitude=1.0, duration=1.0, sampling_rate=8_000)
 if "sig_name" not in st.session_state:
     st.session_state["sig_name"] = "default tone (440 Hz)"
 
-# ---------------------------------------------------------------- sidebar
 with st.sidebar:
     st.markdown("### ◈ Signal Processing Laboratory")
     st.caption("Scientific instrumentation console")
