@@ -1,6 +1,4 @@
-"""Editorial dashboard — the instrument view composed for export.
-
-the CLI import stays unchanged.
+"""ays unchanged.
 """
 
 from __future__ import annotations
