@@ -15,7 +15,7 @@ MIDNIGHT = {
     "muted": "#8b8ba1",           
     "faint": "#56566b",           
     "accent": "#22d3ee",          
-    "accent_violet": "#a78bfa",   # violet — magnitude spectrum
+    "accent_violet": "#a78bfa",   
     "accent_amber": "#fbbf24",    # amber  — phase
     "accent_emerald": "#34d399",  # emerald — filtered / ok
     "accent_rose": "#fb7185",     
