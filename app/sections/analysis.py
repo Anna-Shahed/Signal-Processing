@@ -16,13 +16,11 @@ from signal_processing.io import write_csv, write_json, write_wav
 
 OUT = Path("exports")
 
-
 def _fmt(value, spec: str = ".4f") -> str:
     try:
         return f"{value:{spec}}"
     except (TypeError, ValueError):
         return "—"
-
 
 def render() -> None:
     signal = get("signal")
