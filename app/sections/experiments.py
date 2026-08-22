@@ -1,4 +1,3 @@
-"""Experiments — parameter sweeps over a fixed pipeline, rendered as quiet
 mono tables and exported to CSV. Deterministic (seeded noise)."""
 
 from __future__ import annotations
