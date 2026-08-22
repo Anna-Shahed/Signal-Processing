@@ -60,7 +60,6 @@ def _open_project(path: Path) -> None:
     set_state("project", path.name)
     ui.metadata_row(f"opened -> {path.name}")
 
-
 def render() -> None:
     ui.section_header("New Project")
     name = st.text_input("Project name", value="untitled",
