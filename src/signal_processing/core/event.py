@@ -4,10 +4,8 @@ import json
 from dataclasses import dataclass, field
 from typing import Any
 
-
 @dataclass(slots=True)
 class Event:
-    """A detected temporal event."""
 
     start_time: float
     end_time: float
