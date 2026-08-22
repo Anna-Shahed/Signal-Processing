@@ -18,8 +18,6 @@ SPECTROGRAM_CMAP = [
     "#07070c", "#0d1424", "#142442", "#1d3a66", "#20528c", "#1f6fb0",
     "#22a6cf", "#38d6e8", "#8cf0f5", "#e0fdfb", "#fde68a", "#f59e0b",
 ]
-
-
 def apply_matplotlib_theme() -> None:
     mpl.rcParams.update(
         {
