@@ -242,11 +242,9 @@ pre { padding: 0.6rem 0.8rem; }
                           border-radius: 2px !important;
                           font-family: var(--mono); font-size: 11px; }
 
-/* ---------- plot area -------------------------------------------------------- */
 .stPlotlyChart { background: var(--bg); }
 [data-testid="stPlotlyChart"] { background: var(--bg); }
 
-/* ---------- subtle motion ----------------------------------------------------- */
 .stPlotlyChart, [data-testid="column"] > div, .sp-readout, .sp-stage,
 .sp-meta, .sp-table tr {
   animation: sp-fade 240ms ease both;
@@ -258,7 +256,6 @@ pre { padding: 0.6rem 0.8rem; }
   .sp-meta, .sp-table tr { animation: none; }
 }
 
-/* st.metric fallback — de-chromed */
 [data-testid="stMetric"] { background: transparent !important;
                            border-bottom: 1px solid var(--hairline);
                            padding: 0.85rem 0 !important; }
