@@ -149,7 +149,6 @@ def apply_editorial_theme(fig: go.Figure) -> go.Figure:
 
 
 def new_plotly_figure(editorial: bool = False) -> go.Figure:
-    """Create a blank figure.
 
     Default: full Midnight template. With editorial=True: the flat,
     mono-font editorial theme instead.
