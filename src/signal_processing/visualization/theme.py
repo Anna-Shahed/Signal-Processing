@@ -84,7 +84,6 @@ def apply_matplotlib_theme() -> None:
 
 
 def plotly_template() -> dict:
-    """Return a Plotly layout template matching the Midnight theme."""
     return {
         "layout": {
             "paper_bgcolor": MIDNIGHT["background"],
