@@ -18,7 +18,7 @@ MIDNIGHT = {
     "accent_violet": "#a78bfa",   # violet — magnitude spectrum
     "accent_amber": "#fbbf24",    # amber  — phase
     "accent_emerald": "#34d399",  # emerald — filtered / ok
-    "accent_rose": "#fb7185",     # rose   — events / alarm
+    "accent_rose": "#fb7185",     
     "accent_blue": "#60a5fa",     
 }
 
