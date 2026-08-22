@@ -63,7 +63,6 @@ API_TABLE = [
     ("io", "read_csv, write_csv, read_wav, write_wav, write_json"),
 ]
 
-
 def render() -> None:
     ui.section_header("Mathematics")
     for title, lines in TOPICS:
