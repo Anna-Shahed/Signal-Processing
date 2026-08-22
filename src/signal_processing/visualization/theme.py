@@ -55,8 +55,6 @@ def apply_matplotlib_theme() -> None:
             "lines.markersize": 4.0,
         }
     )
-
-
 def plotly_template() -> dict:
     return {
         "layout": {
