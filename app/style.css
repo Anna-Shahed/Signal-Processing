@@ -1,0 +1,19 @@
+/* Hide Streamlit chrome */
+[data-testid="stHeader"], footer { display: none; }
+.block-container { padding-top: 1rem; max-width: 95%; }
+
+/* Minimal inputs & buttons */
+div[data-baseweb="select"] > div, input {
+    background-color: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid #333 !important;
+    border-radius: 0 !important;
+}
+
+/* Typography & Layout */
+p, span, label { font-family: -apple-system, BlinkMacSystemFont, "San Francisco", sans-serif; font-weight: 300; }
+[data-testid="stMetricValue"] { font-family: "JetBrains Mono", monospace; font-size: 1.5rem; color: #fff; }
+[data-testid="stMetricLabel"] { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #888; }
+
+/* Thin dividers */
+hr { border-top: 1px solid #222; margin: 1em 0; }
