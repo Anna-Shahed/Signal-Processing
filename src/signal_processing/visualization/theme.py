@@ -11,7 +11,7 @@ MIDNIGHT = {
     "panel": "#0e0e16",           
     "border": "#262634",          
     "grid": "#20202c",            
-    "text": "#e8e8f0",            # primary text
+    "text": "#e8e8f0",            
     "muted": "#8b8ba1",           # secondary text
     "faint": "#56566b",           # zero lines, ticks
     "accent": "#22d3ee",          # cyan   — waveform / primary action
