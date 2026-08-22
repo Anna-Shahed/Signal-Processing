@@ -146,20 +146,3 @@ def apply_editorial_theme(fig: go.Figure) -> go.Figure:
         yaxis=dict(showgrid=True, gridwidth=1, gridcolor=MIDNIGHT["grid"], zeroline=False),
     )
     return fig
-
-
-def new_plotly_figure(editorial: bool = False) -> go.Figure:
-    """Create a blank figure.
-
-    Default: full Midnight template. With editorial=True: the flat,
-    mono-font editorial theme instead.
-    """
-    fig = go.Figure()
-    if editorial:
-        return apply_editorial_theme(fig)
-    fig.update_layout(template=plotly_template())
-    return fig
-
-def as_spectrogram_colorscale() -> list[list[float | str]]:
-    n = len(SPECTROGRAM_CMAP)
-    return [[i / (n - 1), color] for i, color in enumerate(SPECTROGRAM_CMAP)]
