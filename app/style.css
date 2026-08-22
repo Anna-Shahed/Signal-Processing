@@ -1,26 +1,4 @@
 
-.sp-meta { font-family: var(--mono); font-size: 10px;
-           color: var(--ink-3); letter-spacing: 0.08em;
-           margin: 0.3rem 0; }
-
-/* ---------- rails --------------------------------------------------------- */
-.sp-rail { border-left: 1px solid var(--hairline); padding-left: 1.25rem; }
-.sp-rail-right { border-right: 1px solid var(--hairline);
-                 padding-right: 1.25rem; }
-
-/* ---------- mono readouts (right panel + anywhere) ------------------------ */
-.sp-readout { padding: 0.85rem 0; border-bottom: 1px solid var(--hairline); }
-.sp-readout-label { display: block; font-family: var(--mono); font-size: 10px;
-                    letter-spacing: 0.18em; text-transform: uppercase;
-                    color: var(--ink-3); margin-bottom: 0.35rem; }
-.sp-readout-value { font-family: var(--mono); font-size: 26px;
-                    font-weight: 400; color: var(--ink); letter-spacing: -0.01em; }
-.sp-readout-value em { font-style: normal; font-size: 11px;
-                       color: var(--ink-2); margin-left: 0.35rem; }
-.sp-readout-alert .sp-readout-value { color: var(--event); }
-.sp-readout-alert .sp-readout-label { color: var(--event); }
-
-/* ---------- pipeline (INPUT -> PROCESS -> ANALYZE -> RESULT) -------------- */
 .sp-pipeline { display: flex; align-items: center; gap: 0; margin: 0.4rem 0 0.6rem; }
 .sp-pipe-node { font-family: var(--mono); font-size: 10px;
                 letter-spacing: 0.22em; color: var(--ink-2);
