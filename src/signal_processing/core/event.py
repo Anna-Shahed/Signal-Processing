@@ -33,11 +33,9 @@ class Event:
 
     @property
     def duration(self) -> float:
-        """Event duration in seconds."""
         return self.end_time - self.start_time
 
     def to_dict(self) -> dict[str, Any]:
-        """Serialize the event to a dictionary."""
         return {
             "start_time": self.start_time,
             "end_time": self.end_time,
@@ -50,12 +48,10 @@ class Event:
         }
 
     def to_json(self, *, indent: int | None = 2) -> str:
-        """Serialize the event to JSON."""
         return json.dumps(self.to_dict(), indent=indent)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Event:
-        """Construct an event from serialized data."""
         fields = {
             "start_time",
             "end_time",
@@ -77,7 +73,6 @@ class Event:
 
     @classmethod
     def from_json(cls, text: str) -> Event:
-        """Construct an event from JSON text."""
         data = json.loads(text)
         if not isinstance(data, dict):
             raise ValueError("Event JSON must contain an object.")
