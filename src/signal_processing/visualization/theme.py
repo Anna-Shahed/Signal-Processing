@@ -160,7 +160,6 @@ def new_plotly_figure(editorial: bool = False) -> go.Figure:
     fig.update_layout(template=plotly_template())
     return fig
 
-
 def as_spectrogram_colorscale() -> list[list[float | str]]:
     n = len(SPECTROGRAM_CMAP)
     return [[i / (n - 1), color] for i, color in enumerate(SPECTROGRAM_CMAP)]
