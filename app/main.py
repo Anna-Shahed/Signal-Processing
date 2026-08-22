@@ -27,7 +27,7 @@ st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 init_state()
 
-ui.render_top_nav()          # brand + 5 quiet nav items + hairline rule
+ui.render_top_nav()        
 
 route = st.session_state.get("route", "lab")
 if route == "projects":
