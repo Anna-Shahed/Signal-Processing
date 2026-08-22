@@ -1,1 +1,269 @@
+:root {
+  --bg: #000000;
+  --bg-raised: #0a0a0c;
+  --bg-panel: #0d0d10;
+  --hairline: #1a1a1e;
+  --hairline-strong: #2a2a30;
+  --ink: #e8e8ea;
+  --ink-2: #9a9aa3;
+  --ink-3: #63636e;
+  --accent: #8f9bb8;
+  --event: #f2c879;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
+          "Helvetica Neue", Arial, sans-serif;
+}
 
+/* ---------- kill Streamlit chrome -------------------------------------- */
+#MainMenu, footer, [data-testid="stHeader"],
+[data-testid="stToolbar"], [data-testid="stDecoration"],
+[data-testid="stStatusWidget"] { display: none !important; }
+
+/* Resilient fallbacks for container views across versions */
+[data-testid="stAppViewContainer"], .stAppContainer, [data-testid="stMain"] { background: var(--bg); }
+.block-container {
+  max-width: 100% !important;
+  padding: 0 1.5rem 2rem !important;
+}
+[data-testid="stMain"] { padding-top: 0; }
+
+/* ---------- base typography --------------------------------------------- */
+html, body, .stApp, p, span, label, div {
+  font-family: var(--sans);
+  color: var(--ink);
+}
+.mono, code, kbd { font-family: var(--mono); }
+
+a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--hairline-strong); }
+a:hover { color: var(--ink); border-bottom-color: var(--ink-2); }
+
+::selection { background: #2a2a30; color: var(--ink); }
+::-moz-selection { background: #2a2a30; color: var(--ink); }
+
+/* thin scrollbars */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #1e1e24; border-radius: 0; }
+::-webkit-scrollbar-track { background: #000; }
+
+/* ---------- top navigation ---------------------------------------------- */
+.sp-topbar { display: flex; align-items: baseline; gap: 1rem;
+             padding: 1.1rem 0 0.9rem; }
+.sp-brand { font-family: var(--mono); font-size: 12px;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--ink); }
+.sp-brand span { color: var(--ink-3); margin-left: 0.6rem;
+                 letter-spacing: 0.1em; }
+
+.sp-topbar + div [data-testid="stButton"] button,
+.sp-topbar + div button {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--ink-2) !important;
+  font-family: var(--mono) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  padding: 0.35rem 0 !important;
+  text-align: left;
+  box-shadow: none !important;
+}
+.sp-topbar + div button[kind="primary"] {
+  color: var(--ink) !important;
+  border-bottom: 1px solid var(--hairline-strong) !important;
+}
+.sp-topbar + div button:hover { color: var(--ink) !important; }
+
+.sp-rule { height: 1px; background: var(--hairline); margin: 0 0 1.25rem; }
+
+/* ---------- section headers ---------------------------------------------- */
+.sp-section { display: flex; align-items: center; gap: 0.75rem;
+              margin: 1.4rem 0 0.9rem; }
+.sp-section span { font-family: var(--mono); font-size: 10px;
+                   letter-spacing: 0.22em; text-transform: uppercase;
+                   color: var(--ink-3); white-space: nowrap; }
+.sp-section i { flex: 1; height: 1px; background: var(--hairline); }
+
+/* ---------- mono meta line ----------------------------------------------- */
+.sp-meta { font-family: var(--mono); font-size: 10px;
+           color: var(--ink-3); letter-spacing: 0.08em;
+           margin: 0.3rem 0; }
+
+/* ---------- rails --------------------------------------------------------- */
+.sp-rail { border-left: 1px solid var(--hairline); padding-left: 1.25rem; }
+.sp-rail-right { border-right: 1px solid var(--hairline);
+                 padding-right: 1.25rem; }
+
+/* ---------- mono readouts (right panel + anywhere) ------------------------ */
+.sp-readout { padding: 0.85rem 0; border-bottom: 1px solid var(--hairline); }
+.sp-readout-label { display: block; font-family: var(--mono); font-size: 10px;
+                    letter-spacing: 0.18em; text-transform: uppercase;
+                    color: var(--ink-3); margin-bottom: 0.35rem; }
+.sp-readout-value { font-family: var(--mono); font-size: 26px;
+                    font-weight: 400; color: var(--ink); letter-spacing: -0.01em; }
+.sp-readout-value em { font-style: normal; font-size: 11px;
+                       color: var(--ink-2); margin-left: 0.35rem; }
+.sp-readout-alert .sp-readout-value { color: var(--event); }
+.sp-readout-alert .sp-readout-label { color: var(--event); }
+
+/* ---------- pipeline (INPUT -> PROCESS -> ANALYZE -> RESULT) -------------- */
+.sp-pipeline { display: flex; align-items: center; gap: 0; margin: 0.4rem 0 0.6rem; }
+.sp-pipe-node { font-family: var(--mono); font-size: 10px;
+                letter-spacing: 0.22em; color: var(--ink-2);
+                padding: 0.25rem 0.9rem; border: 1px solid var(--hairline-strong);
+                background: var(--bg-raised); }
+.sp-pipe-node:first-child { color: var(--ink); }
+.sp-pipe-arrow { flex: 1; height: 1px; background: var(--hairline-strong);
+                 position: relative; min-width: 1.5rem; }
+.sp-pipe-arrow::after { content: ""; position: absolute; right: 0; top: -2px;
+                        border: 2px solid var(--hairline-strong);
+                        border-left: none; border-bottom: none; width: 4px; height: 4px;
+                        transform: rotate(45deg); }
+.sp-stage-row { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem;
+                margin: 0 0 0.4rem; }
+.sp-stage { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+            color: var(--ink-2); text-transform: uppercase; }
+.sp-stage .sp-led { margin-right: 0.45rem; }
+
+/* status LEDs — flat, not neon */
+.sp-led { display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+         vertical-align: middle; }
+.sp-led-idle   { background: #26262c; }
+.sp-led-active { background: var(--ink); box-shadow: 0 0 6px rgba(232,232,234,0.4); }
+.sp-led-done   { background: var(--accent); }
+.sp-led-alert  { background: var(--event); }
+
+/* ---------- tables (moved from sections) ----------------------------------- */
+.sp-table { border-collapse: collapse; width: 100%;
+            font-family: var(--mono); font-size: 11px; color: var(--ink-2); }
+.sp-table th { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+               color: var(--ink-3); text-align: left; padding: 0.5rem 0.75rem;
+               border-bottom: 1px solid var(--hairline-strong); font-weight: 400; }
+.sp-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--hairline); }
+.sp-table tr:hover td { color: var(--ink); }
+
+.sp-api { width: 100%; border-collapse: collapse; font-size: 11px; }
+.sp-api td { border-bottom: 1px solid var(--hairline); padding: 0.3rem 0.6rem; }
+.sp-api-mod { font-family: var(--mono); color: var(--ink); white-space: nowrap; }
+.sp-api-members { font-family: var(--mono); color: var(--ink-2); }
+
+/* ---------- native widgets: understated, native --------------------------- */
+div[data-baseweb="select"] > div,
+.stNumberInput input, .stTextInput input, .stTextArea textarea {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--hairline-strong) !important;
+  border-radius: 0 !important;
+  color: var(--ink) !important;
+  font-family: var(--mono) !important;
+  font-size: 12px !important;
+  box-shadow: none !important;
+}
+div[data-baseweb="select"] > div:hover,
+.stNumberInput input:hover, .stTextInput input:hover { border-color: var(--ink-2) !important; }
+
+.stSlider [data-baseweb="slider"] div[role="slider"] {
+  background: var(--ink) !important; border: none !important;
+  box-shadow: none !important; width: 10px; height: 10px;
+}
+.stSlider [data-testid="stSliderThumbValue"] { font-family: var(--mono); }
+.stSlider [data-testid="stSliderTickBar"] div { background: var(--hairline-strong) !important; }
+
+.stFileUploader section { border: none !important;
+                          border-bottom: 1px solid var(--hairline-strong) !important;
+                          border-radius: 0 !important; background: transparent !important; }
+
+.stButton > button, .stFormSubmitButton > button,
+[data-testid="stDownloadButton"] button {
+  background: transparent !important; border: 1px solid var(--hairline-strong) !important;
+  border-radius: 2px !important; color: var(--ink-2) !important;
+  font-family: var(--mono) !important; font-size: 11px !important;
+  letter-spacing: 0.12em !important; text-transform: uppercase !important;
+  box-shadow: none !important; transition: color 160ms ease, border-color 160ms ease;
+}
+.stButton > button:hover, [data-testid="stDownloadButton"] button:hover {
+  color: var(--ink) !important; border-color: var(--ink-2) !important;
+}
+.stButton > button[kind="primary"] { color: var(--ink) !important;
+                                    border-color: var(--ink-2) !important; }
+
+.stCheckbox { font-family: var(--sans); font-size: 12px; color: var(--ink-2); }
+.stCheckbox [data-testid="stCheckbox"] > div:first-child {
+  border-color: var(--hairline-strong) !important;
+  background: transparent !important;
+}
+
+/* focus — hairline, no glow */
+button:focus-visible, input:focus-visible, textarea:focus-visible,
+div[data-baseweb="select"]:focus-within > div {
+  outline: 1px solid var(--ink-2) !important;
+  outline-offset: 1px;
+  box-shadow: none !important;
+}
+
+/* ---------- captions & alerts: quiet, not boxes --------------------------- */
+[data-testid="stCaptionContainer"] p {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
+  letter-spacing: 0.06em; margin: 0.4rem 0;
+}
+[data-testid="stAlertContainer"] {
+  background: transparent !important;
+  border: none !important;
+  border-left: 1px solid var(--hairline-strong) !important;
+  border-radius: 0 !important;
+  padding: 0.4rem 0 0.4rem 0.9rem !important;
+  color: var(--ink-2) !important;
+  font-size: 12px !important;
+}
+[data-testid="stAlertContainer"] [data-testid="stMarkdownContainer"] p { color: var(--ink-2); }
+
+/* ---------- code blocks ----------------------------------------------------- */
+pre, code {
+  font-family: var(--mono) !important;
+  background: var(--bg-raised) !important;
+  color: var(--ink-2) !important;
+  border: 1px solid var(--hairline) !important;
+  border-radius: 0 !important;
+  font-size: 11px !important;
+}
+pre { padding: 0.6rem 0.8rem; }
+
+/* ---------- expanders & dialogs: hairline, transparent ---------------------- */
+[data-testid="stExpander"] { border: none !important;
+                             border-bottom: 1px solid var(--hairline) !important;
+                             background: transparent !important; }
+[data-testid="stExpander"] summary { font-family: var(--mono); font-size: 11px;
+                                   letter-spacing: 0.12em; color: var(--ink-2); }
+[data-testid="stDialog"] { background: var(--bg-raised) !important;
+                           border: 1px solid var(--hairline-strong) !important;
+                           border-radius: 2px !important; }
+[data-testid="stToast"] { background: var(--bg-raised) !important;
+                          border: 1px solid var(--hairline-strong) !important;
+                          border-radius: 2px !important;
+                          font-family: var(--mono); font-size: 11px; }
+
+/* ---------- plot area -------------------------------------------------------- */
+.stPlotlyChart { background: var(--bg); }
+[data-testid="stPlotlyChart"] { background: var(--bg); }
+
+/* ---------- subtle motion ----------------------------------------------------- */
+.stPlotlyChart, [data-testid="column"] > div, .sp-readout, .sp-stage,
+.sp-meta, .sp-table tr {
+  animation: sp-fade 240ms ease both;
+}
+@keyframes sp-fade { from { opacity: 0; transform: translateY(2px); }
+                     to   { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .stPlotlyChart, [data-testid="column"] > div, .sp-readout, .sp-stage,
+  .sp-meta, .sp-table tr { animation: none; }
+}
+
+/* st.metric fallback — de-chromed */
+[data-testid="stMetric"] { background: transparent !important;
+                           border-bottom: 1px solid var(--hairline);
+                           padding: 0.85rem 0 !important; }
+[data-testid="stMetricLabel"] { font-family: var(--mono) !important;
+                                font-size: 10px !important; letter-spacing: 0.18em;
+                                text-transform: uppercase; color: var(--ink-3) !important; }
+[data-testid="stMetricValue"] { font-family: var(--mono) !important;
+                                font-size: 26px !important; color: var(--ink) !important; }
