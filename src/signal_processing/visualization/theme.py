@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 MIDNIGHT = {
-    "background": "#0a0a0f",      # near-black page
+    "background": "#0a0a0f",      
     "surface": "#11111a",         # plot / card background
     "surface_alt": "#181824",     # hover / legend background
     "panel": "#0e0e16",           # sidebar / panel background
