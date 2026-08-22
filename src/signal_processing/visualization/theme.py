@@ -44,7 +44,6 @@ SPECTROGRAM_CMAP = [
 
 
 def apply_matplotlib_theme() -> None:
-    """Apply the Midnight theme to Matplotlib's global rcParams."""
     mpl.rcParams.update(
         {
             "figure.facecolor": MIDNIGHT["background"],
