@@ -3,7 +3,7 @@ from signal_processing.visualization.theme import apply_editorial_theme
 
 st.set_page_config(page_title="Signal Lab", layout="wide", initial_sidebar_state="collapsed")
 
-#
+
 with open("app/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
