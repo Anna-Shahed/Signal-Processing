@@ -37,7 +37,6 @@ def plot_spectrogram(
     else:
         label = "magnitude"
 
-    # values assumed (frames, freq_bins); transpose -> (freq_bins, frames)
     extent = [spectrogram.times[0], spectrogram.times[-1],
               spectrogram.frequencies[0], spectrogram.frequencies[-1]]
     im = ax.imshow(data.T, aspect="auto", origin="lower", extent=extent,
