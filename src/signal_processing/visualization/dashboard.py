@@ -59,7 +59,6 @@ def plot_dashboard(
     fig.tight_layout()
     return fig
 
-
 def plot_filter_response(
     b,
     a=None,
@@ -68,7 +67,6 @@ def plot_filter_response(
     n: int = 4096,
     figsize: tuple[float, float] = (10, 4.2),
 ):
-    """Magnitude and phase response of a filter on black, log-frequency."""
     from scipy.signal import freqz
 
     use_editorial_style()
