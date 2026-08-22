@@ -1,8 +1,5 @@
 """Projects — save, list, open, and delete signal experiments.
 
-A project is a JSON file on disk bundling the Signal serialization, the
-pipeline stage list, and a metrics snapshot. No metadata is discarded.
-
 from __future__ import annotations
 
 import json
