@@ -1,4 +1,27 @@
+from __future__ import annotations
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+
+MIDNIGHT = {
+    "background": "#0a0a0f",
+    "surface": "#11111a",
+    "surface_alt": "#181824",
+    "panel": "#0e0e16",
+    "border": "#262634",
+    "grid": "#20202c",
+    "text": "#e8e8f0",
+    "muted": "#8b8ba1",
+    "faint": "#56566b",
+    "accent": "#22d3ee",
+    "accent_violet": "#a78bfa",
+    "accent_amber": "#fbbf24",
+    "accent_emerald": "#34d399",
+    "accent_rose": "#fb7185",
+    "accent_blue": "#60a5fa",
+}
+
 SERIES = [
     MIDNIGHT["accent"],
     MIDNIGHT["accent_violet"],
@@ -7,15 +30,19 @@ SERIES = [
     MIDNIGHT["accent_rose"],
     MIDNIGHT["accent_blue"],
 ]
+
 FONT_STACK = ["Inter", "IBM Plex Sans", "Segoe UI", "DejaVu Sans", "sans-serif"]
 MONO_STACK = [
     "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular",
     "Menlo", "Consolas", "DejaVu Sans Mono", "monospace",
 ]
+
 SPECTROGRAM_CMAP = [
     "#07070c", "#0d1424", "#142442", "#1d3a66", "#20528c", "#1f6fb0",
     "#22a6cf", "#38d6e8", "#8cf0f5", "#e0fdfb", "#fde68a", "#f59e0b",
 ]
+
+
 def apply_matplotlib_theme() -> None:
     mpl.rcParams.update(
         {
@@ -54,7 +81,10 @@ def apply_matplotlib_theme() -> None:
             "lines.markersize": 4.0,
         }
     )
+
+
 def plotly_template() -> dict:
+    """Return a Plotly layout template matching the Midnight theme."""
     return {
         "layout": {
             "paper_bgcolor": MIDNIGHT["background"],
@@ -101,10 +131,36 @@ def plotly_template() -> dict:
     }
 
 
-def new_plotly_figure() -> go.Figure:
+def apply_editorial_theme(fig: go.Figure) -> go.Figure:
+    """Flat, mono-font, near-black layout — the 'editor/terminal' look.
+
+    Matches the original theme but pulls colors from MIDNIGHT so the
+    whole module stays consistent.
+    """
+    fig.update_layout(
+        plot_bgcolor=MIDNIGHT["background"],
+        paper_bgcolor=MIDNIGHT["background"],
+        font=dict(family=", ".join(MONO_STACK), color=MIDNIGHT["muted"], size=10),
+        margin=dict(l=0, r=0, t=20, b=0),
+        xaxis=dict(showgrid=True, gridwidth=1, gridcolor=MIDNIGHT["grid"], zeroline=False),
+        yaxis=dict(showgrid=True, gridwidth=1, gridcolor=MIDNIGHT["grid"], zeroline=False),
+    )
+    return fig
+
+
+def new_plotly_figure(editorial: bool = False) -> go.Figure:
+    """Create a blank figure.
+
+    Default: full Midnight template. With editorial=True: the flat,
+    mono-font editorial theme instead.
+    """
     fig = go.Figure()
+    if editorial:
+        return apply_editorial_theme(fig)
     fig.update_layout(template=plotly_template())
     return fig
+
+
 def as_spectrogram_colorscale() -> list[list[float | str]]:
     n = len(SPECTROGRAM_CMAP)
     return [[i / (n - 1), color] for i, color in enumerate(SPECTROGRAM_CMAP)]
