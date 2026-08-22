@@ -14,12 +14,10 @@
           "Helvetica Neue", Arial, sans-serif;
 }
 
-/* ---------- kill Streamlit chrome -------------------------------------- */
 #MainMenu, footer, [data-testid="stHeader"],
 [data-testid="stToolbar"], [data-testid="stDecoration"],
 [data-testid="stStatusWidget"] { display: none !important; }
 
-/* Resilient fallbacks for container views across versions */
 [data-testid="stAppViewContainer"], .stAppContainer, [data-testid="stMain"] { background: var(--bg); }
 .block-container {
   max-width: 100% !important;
