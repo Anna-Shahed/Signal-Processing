@@ -9,7 +9,7 @@ MIDNIGHT = {
     "surface": "#11111a",        
     "surface_alt": "#181824",     
     "panel": "#0e0e16",           
-    "border": "#262634",          # hairline borders
+    "border": "#262634",          
     "grid": "#20202c",            # plot grid
     "text": "#e8e8f0",            # primary text
     "muted": "#8b8ba1",           # secondary text
