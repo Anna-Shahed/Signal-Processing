@@ -1,8 +1,6 @@
 """Editorial dashboard — the instrument view composed for export.
 
-Used by the CLI (`signal-process demo`) and examples. Waveform on top,
-spectrum below, optional spectrogram third. Includes `plot_filter_response`
-so the CLI import stays unchanged.
+the CLI import stays unchanged.
 """
 
 from __future__ import annotations
