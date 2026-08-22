@@ -256,7 +256,6 @@ pre { padding: 0.6rem 0.8rem; }
   .sp-meta, .sp-table tr { animation: none; }
 }
 
-/* st.metric fallback — de-chromed */
 [data-testid="stMetric"] { background: transparent !important;
                            border-bottom: 1px solid var(--hairline);
                            padding: 0.85rem 0 !important; }
