@@ -1,9 +1,3 @@
-"""Signal Lab — a single scientific instrument workspace.
-
-Top navigation + three-pane instrument, styled by app/styles.css.
-Routes: lab / projects / experiments / analysis / docs.
-"""
-
 from __future__ import annotations
 
 from pathlib import Path
