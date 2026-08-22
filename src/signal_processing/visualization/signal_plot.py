@@ -1,4 +1,3 @@
-"""Editorial waveform plots for static export.
 from __future__ import annotations
 
 import numpy as np
