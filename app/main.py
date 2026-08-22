@@ -9,7 +9,6 @@ with open("app/style.css") as f:
 nav_cols = st.columns(6)
 with nav_cols[0]: st.markdown("**Signal Lab**")
 with nav_cols[1]: st.markdown("Projects")
-# ... (Pipeline state tracker: INPUT → PROCESS → ANALYZE → RESULT)
 st.markdown("<hr>", unsafe_allow_html=True)
 
 # 2. Main Layout
