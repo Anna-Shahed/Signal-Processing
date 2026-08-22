@@ -78,7 +78,6 @@ a:hover { color: var(--ink); border-bottom-color: var(--ink-2); }
                    color: var(--ink-3); white-space: nowrap; }
 .sp-section i { flex: 1; height: 1px; background: var(--hairline); }
 
-/* ---------- mono meta line ----------------------------------------------- */
 .sp-meta { font-family: var(--mono); font-size: 10px;
            color: var(--ink-3); letter-spacing: 0.08em;
            margin: 0.3rem 0; }
