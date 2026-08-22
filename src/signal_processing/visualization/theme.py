@@ -132,11 +132,9 @@ def plotly_template() -> dict:
 
 
 def new_plotly_figure() -> go.Figure:
-    """Create an empty :class:`go.Figure` with the Midnight template applied."""
     fig = go.Figure()
     fig.update_layout(template=plotly_template())
     return fig
-
 
 def as_spectrogram_colorscale() -> list[list[float | str]]:
     n = len(SPECTROGRAM_CMAP)
