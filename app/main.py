@@ -24,7 +24,7 @@ with left_rail:
 
 with center_workspace:
     st.markdown("### TIME DOMAIN")
-    # Render Plotly waveform (line_width=1, color="white")
+    # Render Plotly waveform 
     st.markdown("### FREQUENCY DOMAIN")
 
 with right_rail:
