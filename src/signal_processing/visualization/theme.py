@@ -12,7 +12,7 @@ MIDNIGHT = {
     "border": "#262634",          
     "grid": "#20202c",            
     "text": "#e8e8f0",            
-    "muted": "#8b8ba1",           # secondary text
+    "muted": "#8b8ba1",           
     "faint": "#56566b",           # zero lines, ticks
     "accent": "#22d3ee",          # cyan   — waveform / primary action
     "accent_violet": "#a78bfa",   # violet — magnitude spectrum
