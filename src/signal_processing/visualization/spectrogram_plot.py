@@ -14,10 +14,6 @@ def plot_spectrum(
     ax=None,
     figsize: tuple[float, float] = (10, 3.6),
 ):
-    """Plot magnitude, phase, or power on black.
- explicit: magnitude uses 20*log10(|X|),
-    power uses 10*log10(|X|^2). Phase is unwrapped.
-    """
     use_editorial_style()
     if ax is None:
         fig, ax = plt.subplots(figsize=figsize)
