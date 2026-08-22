@@ -1,27 +1,4 @@
 
-#MainMenu, footer, [data-testid="stHeader"],
-[data-testid="stToolbar"], [data-testid="stDecoration"],
-[data-testid="stStatusWidget"] { display: none !important; }
-
-[data-testid="stAppViewContainer"] { background: var(--bg); }
-.block-container {
-  max-width: 100% !important;
-  padding: 0 1.5rem 2rem !important;
-}
-[data-testid="stMain"] { padding-top: 0; }
-
-/* ---------- base typography --------------------------------------------- */
-html, body, .stApp, p, span, label, div {
-  font-family: var(--sans);
-  color: var(--ink);
-}
-.mono, code, kbd { font-family: var(--mono); }
-
-a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--hairline-strong); }
-a:hover { color: var(--ink); border-bottom-color: var(--ink-2); }
-
-::selection { background: #2a2a30; color: var(--ink); }
-::-moz-selection { background: #2a2a30; color: var(--ink); }
 
 /* thin scrollbars */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
