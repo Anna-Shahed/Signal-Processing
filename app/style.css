@@ -212,7 +212,6 @@ div[data-baseweb="select"]:focus-within > div {
 }
 [data-testid="stAlertContainer"] [data-testid="stMarkdownContainer"] p { color: var(--ink-2); }
 
-/* ---------- code blocks ----------------------------------------------------- */
 pre, code {
   font-family: var(--mono) !important;
   background: var(--bg-raised) !important;
