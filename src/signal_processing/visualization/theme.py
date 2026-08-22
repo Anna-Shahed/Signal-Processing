@@ -4,24 +4,6 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
-MIDNIGHT = {
-    "background": "#0a0a0f",      
-    "surface": "#11111a",        
-    "surface_alt": "#181824",     
-    "panel": "#0e0e16",           
-    "border": "#262634",          
-    "grid": "#20202c",            
-    "text": "#e8e8f0",            
-    "muted": "#8b8ba1",           
-    "faint": "#56566b",           
-    "accent": "#22d3ee",          
-    "accent_violet": "#a78bfa",   
-    "accent_amber": "#fbbf24",    
-    "accent_emerald": "#34d399",  
-    "accent_rose": "#fb7185",     
-    "accent_blue": "#60a5fa",     
-}
-
 SERIES = [
     MIDNIGHT["accent"],
     MIDNIGHT["accent_violet"],
