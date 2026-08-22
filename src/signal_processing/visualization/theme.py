@@ -8,7 +8,6 @@ SERIES = [
     MIDNIGHT["accent_rose"],
     MIDNIGHT["accent_blue"],
 ]
-
 FONT_STACK = ["Inter", "IBM Plex Sans", "Segoe UI", "DejaVu Sans", "sans-serif"]
 MONO_STACK = [
     "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular",
