@@ -1,29 +1,4 @@
 
-/* ---------- native widgets: understated, native --------------------------- */
-div[data-baseweb="select"] > div,
-.stNumberInput input, .stTextInput input, .stTextArea textarea {
-  background: transparent !important;
-  border: none !important;
-  border-bottom: 1px solid var(--hairline-strong) !important;
-  border-radius: 0 !important;
-  color: var(--ink) !important;
-  font-family: var(--mono) !important;
-  font-size: 12px !important;
-  box-shadow: none !important;
-}
-div[data-baseweb="select"] > div:hover,
-.stNumberInput input:hover, .stTextInput input:hover { border-color: var(--ink-2) !important; }
-
-.stSlider [data-baseweb="slider"] div[role="slider"] {
-  background: var(--ink) !important; border: none !important;
-  box-shadow: none !important; width: 10px; height: 10px;
-}
-.stSlider [data-testid="stSliderThumbValue"] { font-family: var(--mono); }
-.stSlider [data-testid="stSliderTickBar"] div { background: var(--hairline-strong) !important; }
-
-.stFileUploader section { border: none !important;
-                          border-bottom: 1px solid var(--hairline-strong) !important;
-                          border-radius: 0 !important; background: transparent !important; }
 
 .stButton > button, .stFormSubmitButton > button,
 [data-testid="stDownloadButton"] button {
