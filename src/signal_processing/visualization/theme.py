@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 MIDNIGHT = {
     "background": "#0a0a0f",      
     "surface": "#11111a",        
-    "surface_alt": "#181824",     # hover / legend background
+    "surface_alt": "#181824",     
     "panel": "#0e0e16",           # sidebar / panel background
     "border": "#262634",          # hairline borders
     "grid": "#20202c",            # plot grid
