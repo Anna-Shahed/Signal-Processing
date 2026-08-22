@@ -1,4 +1,3 @@
-"""Editorial UI primitives — HTML strings, not cards."""
 from __future__ import annotations
 
 import streamlit as st
