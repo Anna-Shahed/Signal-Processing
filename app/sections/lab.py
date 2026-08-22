@@ -124,7 +124,6 @@ def render() -> None:
                 f"bins={spec.frequencies.size}  df={spec.frequencies[1]:.2f}Hz"
             )
 
-    # --- RIGHT: analysis panel -------------------------------------------
     with right:
         st.markdown('<div class="sp-rail sp-rail-right">', unsafe_allow_html=True)
         ui.section_header("Analysis")
