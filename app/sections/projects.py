@@ -1,5 +1,3 @@
-"""Projects — save, list, open, and delete signal experiments.
-
 from __future__ import annotations
 
 import json
