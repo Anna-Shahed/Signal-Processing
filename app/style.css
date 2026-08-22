@@ -188,7 +188,6 @@ div[data-baseweb="select"] > div:hover,
   background: transparent !important;
 }
 
-/* focus — hairline, no glow */
 button:focus-visible, input:focus-visible, textarea:focus-visible,
 div[data-baseweb="select"]:focus-within > div {
   outline: 1px solid var(--ink-2) !important;
@@ -196,7 +195,6 @@ div[data-baseweb="select"]:focus-within > div {
   box-shadow: none !important;
 }
 
-/* ---------- captions & alerts: quiet, not boxes --------------------------- */
 [data-testid="stCaptionContainer"] p {
   font-family: var(--mono); font-size: 10px; color: var(--ink-3);
   letter-spacing: 0.06em; margin: 0.4rem 0;
