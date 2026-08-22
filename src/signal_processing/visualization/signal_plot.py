@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 from ..core import Event, Signal
 from .mpl import use_editorial_style
 
-
 def plot_signal(
     signal: Signal,
     *,
@@ -17,11 +16,6 @@ def plot_signal(
     ax=None,
     figsize: tuple[float, float] = (10, 3.6),
 ):
-
-
-    Event intervals render as faint amber bands with dashed edges — the only
-    color allowed in the time domain.
-    """
     use_editorial_style()
     if ax is None:
         fig, ax = plt.subplots(figsize=figsize)
