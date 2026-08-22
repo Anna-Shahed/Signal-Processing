@@ -26,7 +26,7 @@ with center_workspace:
     st.markdown("### TIME DOMAIN")
     # Render Plotly waveform (line_width=1, color="white")
     st.markdown("### FREQUENCY DOMAIN")
-    # Render Plotly spectrum
+    # Render Plotly
 
 with right_rail:
     st.markdown("### ANALYSIS")
@@ -35,4 +35,3 @@ with right_rail:
     st.metric("SNR", "12.4 dB")
     st.markdown("<hr>", unsafe_allow_html=True)
     st.markdown("### EVENTS")
-    
