@@ -136,7 +136,7 @@ def apply_editorial_theme(fig: go.Figure) -> go.Figure:
 
     Matches the original theme but pulls colors from MIDNIGHT so the
     whole module stays consistent.
-    """
+    "
     fig.update_layout(
         plot_bgcolor=MIDNIGHT["background"],
         paper_bgcolor=MIDNIGHT["background"],
@@ -158,7 +158,6 @@ def new_plotly_figure(editorial: bool = False) -> go.Figure:
         return apply_editorial_theme(fig)
     fig.update_layout(template=plotly_template())
     return fig
-
 
 def as_spectrogram_colorscale() -> list[list[float | str]]:
     n = len(SPECTROGRAM_CMAP)
