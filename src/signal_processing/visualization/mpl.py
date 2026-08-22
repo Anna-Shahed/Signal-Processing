@@ -22,7 +22,6 @@ from .theme import (
 
 _APPLIED = False
 
-
 def use_editorial_style() -> None:
     """Apply the midnight rcParams once per process."""
     global _APPLIED
@@ -57,7 +56,6 @@ def use_editorial_style() -> None:
         "axes.prop_cycle": mpl.cycler(color=[INK, ACCENT, EVENT, "#8a8f9d", "#5c9d8c"]),
     })
     _APPLIED = True
-
 
 def mono_annotation(ax, text: str) -> None:
     """Small mono technical label floating above an axes (metadata line)."""
