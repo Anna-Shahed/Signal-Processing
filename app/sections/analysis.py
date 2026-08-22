@@ -1,5 +1,4 @@
 """Analysis — the full readout of the current signal: statistics, spectral
-features, detected events, anomalies, and exports."""
 from __future__ import annotations
 
 from pathlib import Path
