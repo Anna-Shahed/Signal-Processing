@@ -6,7 +6,6 @@ st.set_page_config(page_title="Signal Lab", layout="wide", initial_sidebar_state
 with open("app/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# 1. Top Navigation
 nav_cols = st.columns(6)
 with nav_cols[0]: st.markdown("**Signal Lab**")
 with nav_cols[1]: st.markdown("Projects")
