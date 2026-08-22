@@ -21,11 +21,6 @@ def plot_spectrogram(
     ax=None,
     figsize: tuple[float, float] = (10, 4.6),
 ):
-    """Plot the spectrogram on black with a hand-built ice ramp.
-
-    Faint structure survives in dark mode while loud bands stay controlled;
-    the floor is explicit and user-adjustable.
-    """
     use_editorial_style()
     colormap = MIDNIGHT if cmap == "midnight" else cmap
     if ax is None:
