@@ -1,9 +1,5 @@
 """Shared editorial Matplotlib style for exported figures.
 
-Reads the midnight tokens from theme.py so static exports, the live Plotly
-lab, and the Streamlit app all share one source of truth.
-"""
-
 from __future__ import annotations
 
 import matplotlib as mpl
