@@ -1,9 +1,3 @@
-"""Midnight Black theme — the single source of truth for the laboratory's look.
-
-Matplotlib figures, Plotly figures, and the Streamlit app all read from this
-module, so changing the palette here restyles the entire laboratory.
-"""
-
 from __future__ import annotations
 
 import matplotlib as mpl
