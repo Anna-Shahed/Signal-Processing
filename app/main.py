@@ -11,7 +11,6 @@ with nav_cols[0]: st.markdown("**Signal Lab**")
 with nav_cols[1]: st.markdown("Projects")
 st.markdown("<hr>", unsafe_allow_html=True)
 
-
 left_rail, center_workspace, right_rail = st.columns([1.5, 5, 1.5], gap="large")
 
 with left_rail:
