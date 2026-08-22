@@ -15,7 +15,6 @@ left_rail, center_workspace, right_rail = st.columns([1.5, 5, 1.5], gap="large")
 
 with left_rail:
     st.markdown("### SOURCE")
-    # minimal selectboxes and sliders
     fs = st.number_input("Sampling Rate", 8000)
     dur = st.slider("Duration", 0.1, 5.0, 1.0)
 
