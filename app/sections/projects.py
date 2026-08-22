@@ -12,7 +12,6 @@ from signal_processing import Signal, SignalValidationError
 
 PROJECTS_DIR = Path("projects")
 
-
 def _slug(name: str) -> str:
     cleaned = "".join(c if c.isalnum() or c in "-_." else "_"
                       for c in name.strip().lower())
@@ -23,7 +22,6 @@ def _list_projects() -> list[Path]:
     PROJECTS_DIR.mkdir(parents=True, exist_ok=True)
     return sorted(PROJECTS_DIR.glob("*.json"),
                   key=lambda p: p.stat().st_mtime, reverse=True)
-
 
 def _save_project(name: str) -> None:
     signal = get("signal")
@@ -40,7 +38,6 @@ def _save_project(name: str) -> None:
     path = PROJECTS_DIR / f"{_slug(name)}.json"
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     ui.metadata_row(f"saved -> {path}")
-
 
 def _open_project(path: Path) -> None:
     try:
