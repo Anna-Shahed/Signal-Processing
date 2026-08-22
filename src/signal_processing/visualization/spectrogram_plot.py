@@ -1,5 +1,3 @@
-"""Editorial spectrograms — a restrained luminance ramp, not a neon map."""
-
 from __future__ import annotations
 
 import numpy as np
