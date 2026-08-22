@@ -17,7 +17,7 @@ def plot_signal(
     ax=None,
     figsize: tuple[float, float] = (10, 3.6),
 ):
-    """Plot a waveform on black in a thin white line.
+
 
     Event intervals render as faint amber bands with dashed edges — the only
     color allowed in the time domain.
