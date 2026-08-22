@@ -139,6 +139,5 @@ def new_plotly_figure() -> go.Figure:
 
 
 def as_spectrogram_colorscale() -> list[list[float | str]]:
-    """Discrete colorscale for :class:`go.Heatmap`."""
     n = len(SPECTROGRAM_CMAP)
     return [[i / (n - 1), color] for i, color in enumerate(SPECTROGRAM_CMAP)]
