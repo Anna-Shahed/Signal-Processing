@@ -35,4 +35,4 @@ with right_rail:
     st.metric("SNR", "12.4 dB")
     st.markdown("<hr>", unsafe_allow_html=True)
     st.markdown("### EVENTS")
-    # List events 
+    
