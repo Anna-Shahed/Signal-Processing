@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 from ..core import Spectrum
 from .mpl import use_editorial_style
 
-
 def plot_spectrum(
     spectrum: Spectrum,
     *,
