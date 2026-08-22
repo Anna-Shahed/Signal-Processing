@@ -12,7 +12,6 @@ MIDNIGHT = LinearSegmentedColormap.from_list(
     ["#000000", "#0a1020", "#16294a", "#3e5f8f", "#9db6d6", "#e8ecf2"],
 )
 
-
 def plot_spectrogram(
     spectrogram: Spectrogram,
     *,
