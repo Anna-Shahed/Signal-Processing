@@ -1,5 +1,3 @@
-"""Documentation — the mathematics and API reference, set in editorial type.
-Content mirrors docs/mathematics.md; keep both in sync."""
 
 from __future__ import annotations
 
