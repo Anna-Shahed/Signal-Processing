@@ -14,7 +14,7 @@
           "Helvetica Neue", Arial, sans-serif;
 }
 
-/* ---------- kill Streamlit chrome -------------------------------------- */
+/* */
 #MainMenu, footer, [data-testid="stHeader"],
 [data-testid="stToolbar"], [data-testid="stDecoration"],
 [data-testid="stStatusWidget"] { display: none !important; }
