@@ -1,5 +1,3 @@
-"""Event data model used by detection and anomaly-analysis routines."""
-
 from __future__ import annotations
 
 import json
