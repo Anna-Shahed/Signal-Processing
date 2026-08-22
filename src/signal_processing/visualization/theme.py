@@ -17,7 +17,7 @@ MIDNIGHT = {
     "accent": "#22d3ee",          
     "accent_violet": "#a78bfa",   
     "accent_amber": "#fbbf24",    
-    "accent_emerald": "#34d399",  # emerald — filtered / ok
+    "accent_emerald": "#34d399",  
     "accent_rose": "#fb7185",     
     "accent_blue": "#60a5fa",     
 }
