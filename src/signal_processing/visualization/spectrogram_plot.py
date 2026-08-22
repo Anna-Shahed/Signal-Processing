@@ -1,4 +1,4 @@
-"""Spectrogram plotting with Matplotlib."""
+
 
 from __future__ import annotations
 
