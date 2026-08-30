@@ -1,5 +1,3 @@
-"""Classical signal anomaly detection."""
-
 from __future__ import annotations
 
 import numpy as np
@@ -235,4 +233,44 @@ def energy_anomalies(
         metrics={"n_anomalies": len(events)},
         arrays={"frame_energies": energies, "frame_times": np.asarray(frame_times)},
         metadata={"method": "energy", "multiplier": multiplier},
+    )
+
+
+def detect_anomalies(
+    signal: Signal | np.ndarray,
+    *,
+    sampling_rate: float | None = None,
+    method: str = "zscore",
+    threshold: float = 3.0,
+    window_length: int | None = None,
+    multiplier: float = 3.0,
+    frame_length: int = 128,
+    hop_length: int | None = None,
+    event_type: str = "amplitude_anomaly",
+) -> AnalysisResult:
+   
+    name = str(method).lower().strip()
+    if name == "zscore":
+        return zscore_anomalies(
+            signal, sampling_rate=sampling_rate,
+            threshold=threshold, window_length=window_length,
+        )
+    if name == "rolling":
+        return rolling_anomalies(
+            signal, sampling_rate=sampling_rate,
+            window_length=window_length if window_length is not None else 128,
+            multiplier=multiplier, event_type=event_type,
+        )
+    if name == "robust":
+        return robust_threshold_anomalies(
+            signal, sampling_rate=sampling_rate, multiplier=multiplier,
+        )
+    if name == "energy":
+        return energy_anomalies(
+            signal, sampling_rate=sampling_rate,
+            frame_length=frame_length, hop_length=hop_length, multiplier=multiplier,
+        )
+    raise SignalValidationError(
+        f"Unknown anomaly method: {method!r}. Choose from "
+        f"{['zscore', 'rolling', 'robust', 'energy']}."
     )
