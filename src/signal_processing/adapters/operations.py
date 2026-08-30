@@ -1,6 +1,6 @@
 """Shared operation layer: one implementation, three surfaces (CLI, REST, MCP).
 
-Every handler is a pure function over JSON-safe types. The FastAPI rou
+Every handler is a pure 
 """
 
 from __future__ import annotations
