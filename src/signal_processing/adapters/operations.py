@@ -69,8 +69,7 @@ def generate_signal(
     seed: int | None = None,
     noise_amplitude: float = 0.0,
 ) -> dict:
-    """Generate a synthetic waveform: sine, cosine, square, triangle, sawtooth,
-    chirp, white_noise, gaussian_noise, or composite (noise added to tone)."""
+    
     name = waveform
     if waveform in _WAVEFORMS:
         fn = _WAVEFORMS[waveform]
