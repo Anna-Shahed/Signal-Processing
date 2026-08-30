@@ -1,8 +1,7 @@
 """Shared operation layer: one implementation, three surfaces (CLI, REST, MCP).
 
 Every handler is a pure function over JSON-safe types. The FastAPI routes and
-MCP tools are thin mechanical wrappers with zero logic of their own, so the
-three surfaces can never drift apart.
+MCP tools are thin mechanical wrappers with zero logic 
 """
 
 from __future__ import annotations
