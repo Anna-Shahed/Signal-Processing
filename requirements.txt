@@ -1,5 +1,6 @@
-numpy = ">=2.4"
-scipy = ">=1.16"
-matplotlib = ">=3.10"
-plotly = ">=5.22"
-PyWavelets = ">=1.7"
+streamlit>=1.37
+numpy>=2.4
+scipy>=1.16
+matplotlib>=3.10
+plotly>=5.22
+PyWavelets>=1.7
