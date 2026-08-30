@@ -1,10 +1,3 @@
-"""Shared operation layer: one implementation, three surfaces (CLI, REST, MCP).
-
-Every handler is a pure function over JSON-safe types. The FastAPI routes and
-MCP tools are thin mechanical wrappers with zero logic of their own, so the
-three surfaces can never drift apart.
-"""
-
 from __future__ import annotations
 
 from typing import Any
@@ -46,7 +39,6 @@ _WAVEFORMS = {
     "sawtooth": sawtooth, "chirp": chirp,
 }
 
-
 def _arr(a: Any) -> list[float]:
     return np.asarray(a, dtype=float).tolist()
 
@@ -64,11 +56,6 @@ def _signal_to_dict(s: Signal) -> dict:
 def _ok(**kw: Any) -> dict:
     return {"status": "ok", **kw}
 
-
-# --------------------------------------------------------------------------
-# Handlers
-# --------------------------------------------------------------------------
-
 def generate_signal(
     waveform: str,
     frequency: float = 440.0,
@@ -81,8 +68,7 @@ def generate_signal(
     seed: int | None = None,
     noise_amplitude: float = 0.0,
 ) -> dict:
-    """Generate a synthetic waveform: sine, cosine, square, triangle, sawtooth,
-    chirp, white_noise, gaussian_noise, or composite (noise added to tone)."""
+    
     name = waveform
     if waveform in _WAVEFORMS:
         fn = _WAVEFORMS[waveform]
@@ -116,7 +102,7 @@ def fft_spectrum(
     one_sided: bool = True,
     n: int | None = None,
 ) -> dict:
-    """Compute the (optionally one-sided) magnitude spectrum of a signal."""
+   
     sig = Signal(np.asarray(samples, dtype=float), sampling_rate=sampling_rate)
     spec = fft(sig, one_sided=one_sided, n=n)
     freqs = spec.frequencies if hasattr(spec, "frequencies") else frequency_bins(
@@ -134,7 +120,7 @@ def filter_signal(
     order: int = 64,
     zero_phase: bool = True,
 ) -> dict:
-    """Apply a FIR or Butterworth IIR filter (lowpass/highpass/bandpass/bandstop)."""
+  
     sig = Signal(np.asarray(samples, dtype=float), sampling_rate=sampling_rate)
     if kind == "fir":
         if filter_type == "lowpass":
@@ -156,7 +142,7 @@ def filter_signal(
 
 
 def analyze_signal(samples: list[float], sampling_rate: float) -> dict:
-    """Return the full statistical/spectral metric set (mean, rms, SNR, dominant frequency, ...)."""
+   
     sig = Signal(np.asarray(samples, dtype=float), sampling_rate=sampling_rate)
     result = analyze(sig)
     return _ok(metrics={k: (float(v) if isinstance(v, (int, float, np.floating))
@@ -169,7 +155,7 @@ def detect_events_op(
     method: str = "threshold",
     threshold: float = 0.5,
 ) -> dict:
-    """Detect events (threshold, adaptive, or peak based) and return intervals."""
+   
     sig = Signal(np.asarray(samples, dtype=float), sampling_rate=sampling_rate)
     events = detect_events(sig, method=method, threshold=threshold)
     return _ok(events=[{"start": float(e.start), "end": float(e.end),
@@ -177,17 +163,15 @@ def detect_events_op(
                         "confidence": float(getattr(e, "confidence", 1.0))}
                        for e in events])
 
-
 def detect_anomalies_op(
     samples: list[float],
     method: str = "zscore",
     threshold: float = 3.0,
 ) -> dict:
-    """Detect anomalies (zscore, rolling, robust, amplitude, energy)."""
+   
     anomalies = detect_anomalies(np.asarray(samples, dtype=float),
                                  method=method, threshold=threshold)
     return _ok(anomalies=_arr(anomalies))
-
 
 def stft_op(
     samples: list[float],
@@ -196,7 +180,7 @@ def stft_op(
     hop_length: int | None = None,
     window: str = "hann",
 ) -> dict:
-    """Short-time Fourier transform: times, frequencies, and magnitude matrix."""
+  
     hop = hop_length or window_length // 2
     sig = Signal(np.asarray(samples, dtype=float), sampling_rate=sampling_rate)
     res = stft(sig, window_length=window_length, hop_length=hop, window=window)
@@ -206,32 +190,29 @@ def stft_op(
         magnitudes=[[float(v) for v in row] for row in np.abs(res.values)],
     )
 
-
 def resample_op(samples: list[float], sampling_rate: float,
                 target_rate: float) -> dict:
-    """Rational resampling with anti-aliasing to a new sampling rate."""
+  
     sig = Signal(np.asarray(samples, dtype=float), sampling_rate=sampling_rate)
     out = resample(sig, target_rate)
     return _ok(signal=_signal_to_dict(out))
 
 
 def convolve_op(a: list[float], b: list[float], mode: str = "same") -> dict:
-    """Linear convolution of two signals (mode: full, same, valid)."""
+  
     result = convolve(np.asarray(a, dtype=float), np.asarray(b, dtype=float), mode=mode)
     return _ok(result=_arr(result))
-
 
 def kalman_op(
     samples: list[float],
     process_variance: float = 1e-4,
     measurement_variance: float = 1e-2,
 ) -> dict:
-    """Run a Kalman filter over a noisy measurement series."""
+  
     kf = KalmanFilter(process_variance, measurement_variance)
     out = kf.filter(np.asarray(samples, dtype=float))
     filtered = out.filtered if hasattr(out, "filtered") else out.samples
     return _ok(filtered=_arr(filtered))
-
 
 def pipeline_run(
     samples: list[float],
@@ -240,7 +221,7 @@ def pipeline_run(
     cutoff: float = 100.0,
     order: int = 4,
 ) -> dict:
-    """Run a named processing pipeline (detrend, normalize, lowpass, highpass, fft)."""
+ 
     sig = Signal(np.asarray(samples, dtype=float), sampling_rate=sampling_rate)
     pipe = Pipeline()
     for stage in stages:
