@@ -1,1 +1,88 @@
+name: CI
 
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Ruff + import smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-lint-${{ hashFiles('pyproject.toml') }}
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[all,api,mcp]" ruff
+
+      - name: Ruff check
+        run: ruff check src tests app
+
+      - name: Ruff format check
+        run: ruff format --check src tests app
+
+      - name: Byte-compile all modules
+        run: python -m compileall -q src app
+
+      - name: Import smoke (library + API + MCP)
+        run: |
+          python -c "
+          import signal_processing
+          from signal_processing.api import app         
+          from signal_processing import mcp_server        
+          from signal_processing.adapters import operations
+          assert len(mcp_server.mcp.list_tools()) > 0    
+          print(f'imports ok — {len(mcp_server.mcp.list_tools())} MCP tools')
+          "
+
+  test:
+    name: pytest (${{ matrix.python }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[all,api,mcp]" pytest hypothesis pytest-cov
+
+      - name: Run test suite
+        run: pytest --cov=signal_processing --cov-report=term-missing
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-py${{ matrix.python }}
+          path: .coverage
+          if-no-files-found: ignore
