@@ -1,13 +1,3 @@
-"""MCP server — lets any MCP client (Claude, Cursor, Copilot, agents) drive the lab.
-
-Local (stdio):
-    signal-process-mcp
-    # or:  uv run mcp install src/signal_processing/mcp_server.py
-
-Remote (streamable-http, served by the FastAPI app at /mcp):
-    signal-process-api   # then point clients at http://localhost:8000/mcp
-"""
-
 from __future__ import annotations
 
 from typing import Any
@@ -25,7 +15,7 @@ from .adapters.operations import (
     detect_anomalies_op,
     detect_events_op,
     fft_spectrum,
-    filter_signal,
+    filter_signal as _filter_signal,
     generate_signal,
     kalman_op,
     pipeline_run,
@@ -55,9 +45,9 @@ def spectrum(samples: list[float], sampling_rate: float, one_sided: bool = True)
 
 @mcp.tool()
 def filter_signal(samples: list[float], sampling_rate: float, kind: str = "fir",
-                  filter_type: str = "lowpass", cutoff: float = 1_000.0,
-                  cutoff_high: float | None = None, order: int = 64,
-                  zero_phase: bool = True) -> dict:
+                 filter_type: str = "lowpass", cutoff: float = 1_000.0,
+                 cutoff_high: float | None = None, order: int = 64,
+                 zero_phase: bool = True) -> dict:
     """Apply a FIR or Butterworth IIR filter (lowpass/highpass/bandpass/bandstop)."""
     return _filter_signal(samples, sampling_rate, kind, filter_type, cutoff,
                           cutoff_high, order, zero_phase)
