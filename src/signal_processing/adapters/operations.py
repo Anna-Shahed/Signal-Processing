@@ -1,6 +1,3 @@
-"""Shared operation layer: one implementation, three surfaces (CLI, 
-"""
-
 from __future__ import annotations
 
 from typing import Any
