@@ -1,21 +1,25 @@
-"""Pipeline public API."""
+from __future__ import annotations
 
-from .pipeline import Pipeline
-from .stages import (
-    detrend,
-    fft_stage,
-    highpass,
-    lowpass,
-    normalize,
-    peak_detection,
-)
+import importlib
+import pkgutil
+from typing import Any
 
-__all__ = [
-    "Pipeline",
-    "detrend",
-    "fft_stage",
-    "highpass",
-    "lowpass",
-    "normalize",
-    "peak_detection",
-]
+_CACHE: dict[str, Any] = {}
+
+
+def __getattr__(name: str) -> Any:
+   
+    if name in _CACHE:
+        return _CACHE[name]
+    if name.startswith("__"):
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    for info in pkgutil.iter_modules(__path__):
+        try:
+            module = importlib.import_module(f"{__name__}.{info.name}")
+        except Exception:
+            continue
+        attr = getattr(module, name, None)
+        if attr is not None:
+            _CACHE[name] = attr
+            return attr
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
