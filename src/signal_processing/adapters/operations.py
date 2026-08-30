@@ -209,7 +209,7 @@ def resample_op(samples: list[float], sampling_rate: float,
 
 
 def convolve_op(a: list[float], b: list[float], mode: str = "same") -> dict:
-    """Linear convolution of two signals (mode: full, same, valid)."""
+
     result = convolve(np.asarray(a, dtype=float), np.asarray(b, dtype=float), mode=mode)
     return _ok(result=_arr(result))
 
@@ -219,7 +219,7 @@ def kalman_op(
     process_variance: float = 1e-4,
     measurement_variance: float = 1e-2,
 ) -> dict:
-    """Run a Kalman filter over a noisy measurement series."""
+   
     kf = KalmanFilter(process_variance, measurement_variance)
     out = kf.filter(np.asarray(samples, dtype=float))
     filtered = out.filtered if hasattr(out, "filtered") else out.samples
@@ -233,7 +233,7 @@ def pipeline_run(
     cutoff: float = 100.0,
     order: int = 4,
 ) -> dict:
-    """Run a named processing pipeline (detrend, normalize, lowpass, highpass, fft)."""
+    
     sig = Signal(np.asarray(samples, dtype=float), sampling_rate=sampling_rate)
     pipe = Pipeline()
     for stage in stages:
