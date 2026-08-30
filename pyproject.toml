@@ -1,20 +1,20 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "signal-processing"
 version = "0.1.0"
-description = "Educational-grade signal processing laboratory: DFT, FFT, STFT, DWT, filters, analysis, pipelines."
+description = "Signal Processing Laboratory API, MCP server, and Streamlit UI"
 readme = "README.md"
-requires-python = ">=3.10"
-license = { text = "MIT" }
+requires-python = ">=3.11"
 dependencies = [
     "numpy>=2.4",
     "scipy>=1.16",
     "matplotlib>=3.10",
     "plotly>=5.22",
     "PyWavelets>=1.7",
+    "soundfile>=0.12",
     "streamlit>=1.37",
 ]
 
@@ -37,5 +37,5 @@ signal-process-mcp = "signal_processing.mcp_server:main"
 where = ["src"]
 
 [tool.ruff]
-line-length = 100
-target-version = "py310"
+line-length = 88
+target-version = "py311"
