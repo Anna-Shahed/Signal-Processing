@@ -1,0 +1,24 @@
+# Single public port 7860 → three internal services.
+# Streamlit owns the web UI; FastAPI owns /api, /docs, /openapi.json, /mcp.
+:7860 {
+    encode gzip
+
+    handle_path /api/* {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle /openapi.json {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle /docs* {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle /health {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle /mcp* {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle {
+        reverse_proxy 127.0.0.1:8501
+    }
+}
