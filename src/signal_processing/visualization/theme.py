@@ -154,3 +154,14 @@ def new_plotly_figure(editorial: bool = False) -> go.Figure:
 def as_spectrogram_colorscale() -> list[list[float | str]]:
     n = len(SPECTROGRAM_CMAP)
     return [[i / (n - 1), color] for i, color in enumerate(SPECTROGRAM_CMAP)]
+
+ACCENT = "#8f9bb8"
+EVENT = "#f2c879"
+HAIRLINE = "#1a1a1e"
+HAIRLINE_STRONG = "#2a2a30"
+INK = "#e8e8ea"
+INK_2 = "#9a9aa3"
+INK_3 = "#63636e"
+MONO = 'ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace'
+SANS = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Arial, sans-serif'
+
