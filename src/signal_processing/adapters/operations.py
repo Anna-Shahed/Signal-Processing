@@ -57,11 +57,6 @@ def _signal_to_dict(s: Signal) -> dict:
 def _ok(**kw: Any) -> dict:
     return {"status": "ok", **kw}
 
-
-# --------------------------------------------------------------------------
-# Handlers
-# --------------------------------------------------------------------------
-
 def generate_signal(
     waveform: str,
     frequency: float = 440.0,
