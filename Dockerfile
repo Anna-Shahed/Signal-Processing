@@ -1,18 +1,31 @@
 FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
+ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
-WORKDIR /app
+# Caddy reverse proxy (single static binary)
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+    && curl -fsSL -o /usr/local/bin/caddy \
+        "https://github.com/caddyserver/caddy/releases/latest/download/caddy_linux_amd64" \
+    && chmod +x /usr/local/bin/caddy \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY pyproject.toml README.md LICENSE ./
-COPY src ./src
-COPY app ./app
+# Hugging Face Spaces requires a non-root user with UID 1000
+RUN useradd -m -u 1000 user
+USER user
+ENV HOME=/home/user \
+    PATH=/home/user/.local/bin:$PATH
 
-RUN python -m pip install --upgrade pip \
-    && python -m pip install .
+WORKDIR /home/user/app
 
-EXPOSE 8501
+# Layer caching: deps first, code second
+COPY --chown=user pyproject.toml README.md ./
+COPY --chown=user src ./src
+RUN pip install --user --no-cache-dir -e ".[all,api,mcp]"
 
-CMD ["streamlit", "run", "app/main.py", "--server.address=0.0.0.0", "--server.port=8501"]
+COPY --chown=user app ./app
+COPY --chown=user Caddyfile launcher.sh ./
+RUN chmod +x launcher.sh
+
+EXPOSE 7860
+CMD ["./launcher.sh"]
