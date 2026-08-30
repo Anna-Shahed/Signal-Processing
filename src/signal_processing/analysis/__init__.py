@@ -1,4 +1,4 @@
-"""Analysis public API."""
+from ..core import Signal
 
 from .anomaly import (
     energy_anomalies,
