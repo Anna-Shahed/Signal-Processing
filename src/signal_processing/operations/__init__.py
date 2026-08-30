@@ -1,27 +1,25 @@
-"""Signal operations public API."""
+from __future__ import annotations
 
-from .convolution import circular_convolve, convolve, convolve_fft, direct_convolve
-from .correlation import (
-    autocorrelation,
-    cross_correlation,
-    normalized_cross_correlation,
-)
-from .normalization import normalize_peak, normalize_rms
-from .resampling import downsample, resample, upsample
-from .windowing import apply_window
+import importlib
+import pkgutil
+from typing import Any
 
-__all__ = [
-    "apply_window",
-    "autocorrelation",
-    "circular_convolve",
-    "convolve",
-    "convolve_fft",
-    "cross_correlation",
-    "direct_convolve",
-    "downsample",
-    "normalize_peak",
-    "normalize_rms",
-    "normalized_cross_correlation",
-    "resample",
-    "upsample",
-]
+_CACHE: dict[str, Any] = {}
+
+
+def __getattr__(name: str) -> Any:
+   
+    if name in _CACHE:
+        return _CACHE[name]
+    if name.startswith("__"):
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    for info in pkgutil.iter_modules(__path__):
+        try:
+            module = importlib.import_module(f"{__name__}.{info.name}")
+        except Exception:
+            continue
+        attr = getattr(module, name, None)
+        if attr is not None:
+            _CACHE[name] = attr
+            return attr
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
