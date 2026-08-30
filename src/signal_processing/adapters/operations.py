@@ -1,6 +1,4 @@
-"""Shared operation layer: one implementation, three surfaces (CLI, REST, MCP).
-
-Every handler is a pure 
+"""Shared operation layer: one implementation, three surfaces (CLI, 
 """
 
 from __future__ import annotations
