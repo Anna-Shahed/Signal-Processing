@@ -1,19 +1,25 @@
 from __future__ import annotations
 
-from ..core import Signal, SignalIOError
-from .csv import read_csv, write_csv
-from .json import read_json, signal_from_json, to_json_string, write_json
-from .wav import read_wav, write_wav
+import importlib
+import pkgutil
+from typing import Any
 
-__all__ = [
-    "Signal",
-    "SignalIOError",
-    "read_csv",
-    "write_csv",
-    "read_json",
-    "signal_from_json",
-    "to_json_string",
-    "write_json",
-    "read_wav",
-    "write_wav",
-]
+_CACHE: dict[str, Any] = {}
+
+
+def __getattr__(name: str) -> Any:
+  
+    if name in _CACHE:
+        return _CACHE[name]
+    if name.startswith("__"):
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    for info in pkgutil.iter_modules(__path__):
+        try:
+            module = importlib.import_module(f"{__name__}.{info.name}")
+        except Exception:
+            continue
+        attr = getattr(module, name, None)
+        if attr is not None:
+            _CACHE[name] = attr
+            return attr
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
