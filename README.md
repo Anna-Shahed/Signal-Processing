@@ -971,7 +971,3 @@ See [`LICENSE`](LICENSE) for the full license text.
 This project is under active development.
 
 Capabilities described above should be considered supported only when they are implemented, tested and runnable in the current repository.
-
-The repository prioritizes **correctness, reproducibility and inspectability over feature count**.
-
-```
