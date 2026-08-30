@@ -1,45 +1,28 @@
-"""Filter design and application public API."""
+from __future__ import annotations
 
-from .design import frequency_response, magnitude_response, phase_response
-from .fir import (
-    design_bandpass,
-    design_bandstop,
-    design_highpass,
-    design_lowpass,
-    fir_filter,
-)
-from .iir import (
-    butterworth_bandpass,
-    butterworth_bandstop,
-    butterworth_highpass,
-    butterworth_lowpass,
-    chebyshev_highpass,
-    chebyshev_lowpass,
-    iir_filter,
-)
-from .windows import apply_window, blackman, get_window, hamming, hann, kaiser, rectangular
+import importlib
+import pkgutil
+from typing import Any
 
-__all__ = [
-    "apply_window",
-    "blackman",
-    "butterworth_bandpass",
-    "butterworth_bandstop",
-    "butterworth_highpass",
-    "butterworth_lowpass",
-    "chebyshev_highpass",
-    "chebyshev_lowpass",
-    "design_bandpass",
-    "design_bandstop",
-    "design_highpass",
-    "design_lowpass",
-    "fir_filter",
-    "frequency_response",
-    "get_window",
-    "hamming",
-    "hann",
-    "iir_filter",
-    "kaiser",
-    "magnitude_response",
-    "phase_response",
-    "rectangular",
-]
+_CACHE: dict[str, Any] = {}
+
+
+def __getattr__(name: str) -> Any:
+    """Resolve any public name by scanning this package's submodules lazily.
+
+    Never imports at module load, so circular imports are impossible.
+    """
+    if name in _CACHE:
+        return _CACHE[name]
+    if name.startswith("__"):
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    for info in pkgutil.iter_modules(__path__):
+        try:
+            module = importlib.import_module(f"{__name__}.{info.name}")
+        except Exception:
+            continue
+        attr = getattr(module, name, None)
+        if attr is not None:
+            _CACHE[name] = attr
+            return attr
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
