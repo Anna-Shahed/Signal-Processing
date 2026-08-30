@@ -1,5 +1,3 @@
-"""Core signal-processing data structures."""
-
 from .event import Event
 from .result import AnalysisResult
 from .signal import Signal
@@ -13,3 +11,6 @@ __all__ = [
     "Spectrogram",
     "Spectrum",
 ]
+class SignalIOError(Exception):
+    """Raised when a signal cannot be read from or written to a file."""
+
