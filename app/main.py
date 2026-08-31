@@ -22,7 +22,9 @@ st.set_page_config(
     menu_items=None,
 )
 
-css = (Path(__file__).parent / "styles.css").read_text(encoding="utf-8")
+_css_path = Path(__file__).parent / "styles.css"
+css = _css_path.read_text(encoding="utf-8") if _css_path.exists() else ""
+
 st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 init_state()
