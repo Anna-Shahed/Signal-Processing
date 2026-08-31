@@ -4,83 +4,86 @@ import streamlit as st
 
 from app import components as ui
 
-TOPICS: list[tuple[str, list[str]]] = [
-    ("Sampling Theorem",
-     ["A continuous signal must be sampled at fs ≥ 2·fmax (Nyquist rate) to be "
-      "recoverable without error.",
-      "```\nx[n] = xc(n·Ts),   Ts = 1/fs\n```"]),
-    ("Aliasing",
-     ["Frequency content above fs/2 folds back into the band 0..fs/2 and becomes "
-      "indistinguishable from a legitimate component.",
-      "```\nf_alias = |f - k·fs|,   k = round(f / fs)\n```"]),
-    ("DFT",
-     ["The direct (educational) DFT is O(N²).",
-      "```\nX[k] = Σ_n x[n]·exp(-j·2π·kn/N)\n```"]),
-    ("FFT",
-     ["The radix-2 Cooley–Tukey FFT is O(N log N) and requires N = 2^m. The "
-      "production path uses NumPy's FFT; both agree to ~1e-8 in tests.",
-      "```\nX = fft(x);  x = ifft(X)\n```"]),
-    ("Convolution Theorem",
-     ["Multiplication in the frequency domain equals convolution in the time "
-      "domain, enabling FFT convolution at O(N log N).",
-      "```\nx ⊛ h = IFFT(FFT(x) · FFT(h))\n```"]),
-    ("Windowing & Leakage",
-     ["A finite observation window convolves the spectrum with the window's "
-      "transform, smearing energy across bins. Hann/Hamming reduce sidelobes.",
-      "```\ncoherent gain = mean(window)\n```"]),
-    ("STFT",
-     ["The spectrogram slices the signal into overlapping frames, windows each, "
-      "and FFTs them — COLA-compliant Hann at 50% overlap enables exact ISTFT.",
-      "```\nS[m, k] = FFT(x[m·hop : m·hop + n] · w)\n```"]),
-    ("Filtering",
-     ["FIR: windowed-sinc design, linear phase, cost O(M) per sample. IIR: "
-      "Butterworth/Chebyshev, steep rolloff at low order, nonlinear phase.",
-      "```\ny[n] = Σ_k b[k]·x[n-k]   (FIR)\n```"]),
-    ("PSD",
-     ["The periodogram is the squared magnitude of the DFT; Welch's method "
-      "averages periodograms over overlapping, windowed segments to reduce "
-      "variance.",
-      "```\nP[k] = |X[k]|² / (fs · Σ w²)\n```"]),
-    ("Kalman Filter",
-     ["A linear-Gaussian recursive estimator: predict with the state model, "
-      "then correct with the measurement model weighted by covariance.",
-      "```\nx̂ₖ = F·x̂ₖ₋₁ ;  x̂ₖ = x̂ₖ + K·(zₖ - H·x̂ₖ)\n```"]),
+TOPICS = [
+    (
+        "The Discrete Fourier Transform",
+        [
+            (
+                "X[k] = Σₙ x[n] · e^(−2πi·k·n/N)",
+                "The DFT decomposes a signal into N complex sinusoids. Each bin k "
+                "measures how much of frequency k·fs/N lives in the signal.",
+            ),
+            (
+                "|X[k]| = √(Re² + Im²)",
+                "The magnitude spectrum — the amplitude of each frequency component. "
+                "Peaks here are the signal's dominant tones.",
+            ),
+        ],
+    ),
+    (
+        "The Fast Fourier Transform",
+        [
+            (
+                "FFT: O(N log N) — Cooley–Tukey",
+                "The FFT reuses overlapping sub-problems, cutting the DFT's O(N²) "
+                "work to O(N log N). This repo implements both, and proves they agree.",
+            ),
+        ],
+    ),
+    (
+        "The Short-Time Fourier Transform",
+        [
+            (
+                "STFT{m,k} = Σₙ x[m·H + n] · w[n] · e^(−2πi·k·n/W)",
+                "A windowed DFT sliding across time (hop H). The spectrogram is "
+                "|STFT|² — time on one axis, frequency on the other.",
+            ),
+        ],
+    ),
+    (
+        "The Discrete Wavelet Transform",
+        [
+            (
+                "cA, cD = DWT(x) — low-pass + high-pass splits",
+                "The DWT splits the signal into approximation (cA) and detail (cD) "
+                "coefficients, revealing structure at multiple scales at once.",
+            ),
+        ],
+    ),
+    (
+        "Filtering",
+        [
+            (
+                "y[n] = Σₖ b[k] · x[n−k]",
+                "A finite-impulse-response (FIR) filter: each output is a weighted "
+                "sum of the last K inputs. The weights b are the filter's impulse response.",
+            ),
+        ],
+    ),
 ]
 
-API_TABLE = [
-    ("signal_processing", "Signal, Spectrum, Spectrogram, Event, AnalysisResult"),
-    ("generators", "sine, cosine, square, triangle, sawtooth, chirp, white_noise, composite"),
-    ("transforms", "dft, idft, fft, ifft, fft_radix2_educational, stft, istft, dwt, idwt"),
-    ("filters", "design_lowpass/highpass/bandpass/bandstop, fir_filter, "
-                "design_butterworth, iir_filter, frequency_response"),
-    ("operations", "convolve, convolve_fft, circular_convolve, cross_correlation, resample"),
-    ("analysis", "analyze, magnitude_spectrum, psd, detect_peaks, detect_events, detect_anomalies"),
-    ("estimation", "KalmanFilter, periodogram, welch"),
-    ("pipelines", "Pipeline, detrend, normalize, lowpass, fft_stage"),
-    ("io", "read_csv, write_csv, read_wav, write_wav, write_json"),
-]
 
 def render() -> None:
     ui.section_header("Mathematics")
-    for title, lines in TOPICS:
-        st.markdown(f"**{title}**")
-        for line in lines:
-            st.markdown(line)
-        st.markdown("<hr style='border-top:1px solid var(--hairline);margin:.7rem 0'>",
-                    unsafe_allow_html=True)
-
-    ui.section_header("API Reference")
-    rows = "".join(
-        f"<tr><td style='font-family:var(--mono);color:var(--ink);padding:.3rem .6rem'>"
-        f"{module}</td><td style='font-family:var(--mono);color:var(--ink-2);"
-        f"padding:.3rem .6rem'>{members}</td></tr>"
-        for module, members in API_TABLE
-    )
     st.markdown(
         "<style>"
-        ".sp-api{width:100%;border-collapse:collapse;font-size:11px;}"
-        ".sp-api td{border-bottom:1px solid var(--hairline);}"
-        "</style>"
-        f"<table class='sp-api'>{rows}</table>",
+        ".sp-eq{font-family:'Apple Garamond','EB Garamond','Garamond',Georgia,serif;"
+        "font-style:italic;font-weight:700;font-size:16px;color:#d6d6dc;"
+        "border-bottom:1px dashed rgba(255,255,255,0.18);cursor:help;padding:0.15rem 0.1rem;}"
+        ".sp-eq:hover{color:#ffffff;}"
+        ".sp-blurb{color:#9a9aa3;font-size:13.5px;line-height:1.55;margin:0.2rem 0 1rem;}"
+        "</style>",
+        unsafe_allow_html=True,
+    )
+    for title, entries in TOPICS:
+        st.markdown(f"**{title}**")
+        for eq, blurb in entries:
+            st.markdown(
+                f'<div class="sp-eq" title="{blurb}">{eq}</div>'
+                f'<div class="sp-blurb">{blurb}</div>',
+                unsafe_allow_html=True,
+            )
+    st.markdown(
+        '<div class="sp-blurb">Hover any equation for the plain-English explanation.</div>',
         unsafe_allow_html=True,
     )
