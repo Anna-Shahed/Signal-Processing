@@ -21,10 +21,11 @@ def _ui_section_header(title: str) -> None:
 def _ui_metadata_row(text: str) -> None:
     st.markdown(f'<div class="sp-readout">{text}</div>', unsafe_allow_html=True)
 
-def _ui_readout(label: str, value: str, alert: bool = False, **kwargs) -> None:
+def _ui_readout(label: str, value: str, unit: str = "", alert: bool = False, **kwargs) -> None:
     cls = "sp-readout alert" if alert else "sp-readout"
+    unit_html = f' <span style="color:#63636e">{unit}</span>' if unit else ""
     st.markdown(
-        f'<div class="{cls}"><small>{label}</small><br /><strong>{value}</strong></div>',
+        f'<div class="{cls}"><small>{label}</small><br /><strong>{value}{unit_html}</strong></div>',
         unsafe_allow_html=True,
     )
 
@@ -78,6 +79,7 @@ _css_path = Path(__file__).parent / "styles.css"
 css = _css_path.read_text(encoding="utf-8") if _css_path.exists() else ""
 st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
+# --- DESIGN SYSTEM: Apple Garamond + glass everywhere + hover/click motion ---
 st.markdown(
     """<style>
     :root {
@@ -100,13 +102,14 @@ st.markdown(
     .stTextInput input, [data-testid="stNumberInput"] input,
     [data-testid="stSelectbox"] div[data-baseweb="select"] > div,
     [data-testid="stExpander"], [data-testid="stDialog"],
-    .sp-glass, .sp-metric, .sp-event, .sp-pipeline, .sp-topbar {
+    .sp-glass, .sp-metric, .sp-event, .sp-pipeline, .sp-topbar, .sp-rail {
       background: rgba(255,255,255,0.05) !important;
       -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
       backdrop-filter: blur(18px) saturate(160%) !important;
       border: 1px solid rgba(255,255,255,0.10) !important;
       box-shadow: 0 1px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06) !important;
     }
+    .sp-rail { border-radius: 14px !important; padding: 0.9rem 1rem 0.6rem !important; }
 
     /* smaller buttons, bigger text, hover -> glass + bold, click -> press */
     .stButton > button, [data-testid="stDownloadButton"] button {
