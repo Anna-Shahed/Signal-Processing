@@ -198,3 +198,37 @@ a:hover { color: var(--ink); border-bottom-color: var(--ink-2); }
   .sp-readout { font-size: 13px; }
   h1, h2, h3 { letter-spacing: -0.01em !important; }
 }
+
+.sp-glass,
+.stButton > button,
+[data-testid="stDownloadButton"] button,
+.stTextInput input,
+[data-testid="stNumberInput"] input,
+[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
+[data-testid="stExpander"],
+[data-testid="stDialog"] {
+  background: rgba(255, 255, 255, 0.05) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.25),
+              inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+.stButton > button:hover,
+[data-testid="stDownloadButton"] button:hover {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+.sp-topbar {
+  background: rgba(255, 255, 255, 0.04) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 0.9rem 1rem !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-glass, .stButton > button, .sp-topbar {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
