@@ -11,7 +11,6 @@ from app import components as ui
 from signal_processing.analysis import analyze
 from signal_processing.generators import sine, white_noise
 from signal_processing.generators.composite import composite
-from signal_processing.generators.composite import composite, white_noise
 
 RESULTS_DIR = Path("benchmarks/results")
 SWEEP_PARAMS = ["frequency", "noise_amplitude", "duration"]
