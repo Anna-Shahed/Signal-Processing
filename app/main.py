@@ -29,7 +29,38 @@ st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 init_state()
 
-ui.render_top_nav()        
+if not hasattr(ui, "render_top_nav"):
+    def _fallback_top_nav() -> None:
+        import streamlit as st
+
+        st.markdown(
+            '<div class="sp-topbar"><span class="sp-brand">SIGNAL LAB<span>DSP INSTRUMENT</span></span></div>',
+            unsafe_allow_html=True,
+        )
+        items = [
+            ("lab", "Signal Lab"),
+            ("projects", "Projects"),
+            ("experiments", "Experiments"),
+            ("analysis", "Analysis"),
+            ("docs", "Documentation"),
+        ]
+        current = st.session_state.get("route", "lab")
+        cols = st.columns(len(items))
+        for col, (route, label) in zip(cols, items):
+            with col:
+                if st.button(
+                    label,
+                    key=f"nav_{route}",
+                    type="primary" if route == current else "secondary",
+                    use_container_width=True,
+                ):
+                    st.session_state["route"] = route
+                    st.rerun()
+
+    ui.render_top_nav = _fallback_top_nav
+
+ui.render_top_nav()
+      
 
 route = st.session_state.get("route", "lab")
 if route == "projects":
