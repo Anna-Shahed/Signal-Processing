@@ -1,191 +1,161 @@
 from __future__ import annotations
 
-import sys
-from pathlib import Path
+import io
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent
-for _p in (_REPO_ROOT / "src", _REPO_ROOT):
-    if str(_p) not in sys.path:
-        sys.path.insert(0, str(_p))
-
+import numpy as np
 import streamlit as st
 
 from app import components as ui
-from app.state import init_state
-from app.sections import analysis, docs, experiments, lab, projects
-
-
-def _ui_section_header(title: str) -> None:
-    st.markdown(f'<div class="sp-section-title">{title}</div>', unsafe_allow_html=True)
-
-def _ui_metadata_row(text: str) -> None:
-    st.markdown(f'<div class="sp-readout">{text}</div>', unsafe_allow_html=True)
-
-def _ui_readout(label: str, value: str, unit: str = "", alert: bool = False, **kwargs) -> None:
-    cls = "sp-readout alert" if alert else "sp-readout"
-    unit_html = f' <span style="color:#63636e">{unit}</span>' if unit else ""
-    st.markdown(
-        f'<div class="{cls}"><small>{label}</small><br /><strong>{value}{unit_html}</strong></div>',
-        unsafe_allow_html=True,
-    )
-
-def _ui_metric(label: str, value: str) -> None:
-    st.markdown(
-        f'<div class="sp-metric"><span class="label">{label}</span>'
-        f'<div class="value">{value}</div></div>',
-        unsafe_allow_html=True,
-    )
-
-def _ui_led(status: str = "ok") -> None:
-    st.markdown(f'<span class="sp-led {status}"></span>', unsafe_allow_html=True)
-
-def _ui_pipeline_bar(stages=None, active_index: int = -1) -> None:
-    if stages is None:
-        stages = ["input", "process", "analyze", "result"]
-    parts = []
-    for i, s in enumerate(stages):
-        parts.append(
-            f'<span class="{"stage active" if i == active_index else "stage"}">{s}</span>'
-        )
-        if i < len(stages) - 1:
-            parts.append('<span class="arrow">→</span>')
-    st.markdown(f'<div class="sp-pipeline sp-glass">{"".join(parts)}</div>', unsafe_allow_html=True)
-
-def _ui_event_row(text: str) -> None:
-    st.markdown(f'<div class="sp-event">{text}</div>', unsafe_allow_html=True)
-
-for _n, _f in {
-    "section_header": _ui_section_header,
-    "metadata_row": _ui_metadata_row,
-    "readout": _ui_readout,
-    "metric": _ui_metric,
-    "led": _ui_led,
-    "event_row": _ui_event_row,
-}.items():
-    if not hasattr(ui, _n):
-        setattr(ui, _n, _f)
-if not hasattr(ui, "pipeline_bar"):
-    ui.pipeline_bar = _ui_pipeline_bar
-
-st.set_page_config(
-    page_title="Signal Lab",
-    page_icon="",
-    layout="wide",
-    initial_sidebar_state="collapsed",
-    menu_items=None,
+from app.state import get, set as set_state
+from signal_processing.analysis import analyze
+from signal_processing.analysis.anomaly import detect_anomalies
+from signal_processing.analysis.events import detect_events
+from signal_processing.filters import design_lowpass, fir_filter
+from signal_processing.generators import chirp, composite, sine, square, white_noise
+from signal_processing.io import read_csv, read_wav
+from signal_processing.transforms.fft import fft
+from signal_processing.visualization.plotly_template import (
+    add_event_markers, editorial_figure, trace_spectrum, trace_waveform,
 )
 
-_css_path = Path(__file__).parent / "styles.css"
-css = _css_path.read_text(encoding="utf-8") if _css_path.exists() else ""
-st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+WAVEFORMS = ["sine", "square", "chirp", "sine + noise"]
 
-st.markdown(
-    """<style>
-    :root {
-      --font-body: "Apple Garamond", "EB Garamond", "Garamond", Georgia, serif;
-      --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
-    }
-    html, body, .stApp, p, span, label, div, h1, h2, h3, h4 {
-      font-family: var(--font-body) !important;
-      color: #e8e8ea;
-    }
-    body { font-size: 15px; letter-spacing: 0.01em; }
-    .sp-brand, .sp-section-title, .sp-readout small, .sp-metric .label,
-    .mono, code, kbd { font-family: var(--font-mono) !important; }
-    .sp-readout { font-size: 14px; line-height: 1.6; }
-    .sp-readout strong { font-weight: 600; }
-    .sp-readout.alert strong { color: #f2c879; }
 
-    /* glass everywhere */
-    .stButton > button, [data-testid="stDownloadButton"] button,
-    .stTextInput input, [data-testid="stNumberInput"] input,
-    [data-testid="stSelectbox"] div[data-baseweb="select"] > div,
-    [data-testid="stExpander"], [data-testid="stDialog"],
-    .sp-glass, .sp-metric, .sp-event, .sp-pipeline, .sp-topbar, .sp-rail {
-      background: rgba(255,255,255,0.05) !important;
-      -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
-      backdrop-filter: blur(18px) saturate(160%) !important;
-      border: 1px solid rgba(255,255,255,0.10) !important;
-      box-shadow: 0 1px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06) !important;
-    }
-    .sp-rail { border-radius: 14px !important; padding: 0.9rem 1rem 0.6rem !important; }
-
-    /* smaller buttons, bigger text, hover -> glass + bold, click -> press */
-    .stButton > button, [data-testid="stDownloadButton"] button {
-      font-family: var(--font-body) !important;
-      font-size: 14px !important;
-      padding: 0.30rem 0.9rem !important;
-      font-weight: 400 !important;
-      letter-spacing: 0.02em !important;
-      text-transform: none !important;
-      transition: all 0.18s ease !important;
-      border-radius: 10px !important;
-    }
-    .stButton > button:hover {
-      background: rgba(255,255,255,0.13) !important;
-      font-weight: 700 !important;
-      border-color: rgba(255,255,255,0.30) !important;
-      transform: translateY(-1px);
-    }
-    .stButton > button:active { transform: translateY(0px); }
-
-    /* math equations: italic bold serif with hover blurb */
-    .sp-eq {
-      font-family: var(--font-body);
-      font-style: italic;
-      font-weight: 700;
-      font-size: 16px;
-      color: #d6d6dc;
-      border-bottom: 1px dashed rgba(255,255,255,0.15);
-      cursor: help;
-      padding: 0.15rem 0.1rem;
-      transition: color 0.15s ease;
-    }
-    .sp-eq:hover { color: #ffffff; }
-    .sp-blurb { color: #9a9aa3; font-size: 13.5px; line-height: 1.55; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .stButton > button { transition: none !important; transform: none !important; }
-    }
-    </style>""",
-    unsafe_allow_html=True,
-)
-
-init_state()
-
-if not hasattr(ui, "render_top_nav"):
-    def _fallback_top_nav() -> None:
-        items = [
-            ("lab", "Signal Lab"), ("projects", "Projects"),
-            ("experiments", "Experiments"), ("analysis", "Analysis"),
-            ("docs", "Documentation"),
-        ]
-        st.markdown(
-            '<div class="sp-topbar sp-glass"><span class="sp-brand">SIGNAL LAB<span>DSP INSTRUMENT</span></span></div>',
-            unsafe_allow_html=True,
+def _generate(kind: str, fs: float, duration: float) -> None:
+    if kind == "sine":
+        sig = sine(440.0, amplitude=1.0, duration=duration, sampling_rate=fs)
+    elif kind == "square":
+        sig = square(110.0, amplitude=1.0, duration=duration, sampling_rate=fs)
+    elif kind == "chirp":
+        sig = chirp(100.0, 2_000.0, duration=duration, sampling_rate=fs, kind="linear")
+    else:
+        sig = composite(
+            sine(440.0, amplitude=1.0, duration=duration, sampling_rate=fs),
+            white_noise(duration, fs, amplitude=0.05, seed=42),
         )
-        current = st.session_state.get("route", "lab")
-        cols = st.columns(len(items))
-        for col, (route, label) in zip(cols, items):
-            with col:
-                if st.button(label, key=f"nav_{route}",
-                             type="primary" if route == current else "secondary",
-                             use_container_width=True):
-                    st.session_state["route"] = route
-                    st.rerun()
+    set_state("signal", sig)
+    set_state("spectrum", None)
+    set_state("analysis", None)
+    set_state("events", [])
+    set_state("anomalies", [])
 
-    ui.render_top_nav = _fallback_top_nav
 
-ui.render_top_nav()
+def _load_upload(uploaded) -> None:
+    try:
+        suffix = uploaded.name.rsplit(".", 1)[-1].lower()
+        if suffix == "wav":
+            sig = read_wav(io.BytesIO(uploaded.getvalue()))
+        else:
+            sig = read_csv(io.StringIO(uploaded.getvalue().decode("utf-8", errors="replace")))
+        set_state("signal", sig)
+        set_state("spectrum", None)
+        set_state("analysis", None)
+        set_state("events", [])
+        set_state("anomalies", [])
+    except Exception as exc:  # noqa: BLE001
+        st.error(f"Could not load {uploaded.name}: {exc}")
 
-route = st.session_state.get("route", "lab")
-if route == "projects":
-    projects.render()
-elif route == "experiments":
-    experiments.render()
-elif route == "analysis":
-    analysis.render()
-elif route == "docs":
-    docs.render()
-else:
-    lab.render()
+
+def _run_pipeline() -> None:
+    sig = get("signal")
+    if sig is None:
+        return
+    stages: list[str] = []
+    if st.session_state.get("stage_fft"):
+        set_state("spectrum", fft(sig, one_sided=True))
+        stages.append("FFT")
+    if st.session_state.get("stage_lowpass"):
+        b = design_lowpass(64, 1_000, sig.sampling_rate, window="hamming")
+        sig = fir_filter(sig, b, zero_phase=True)
+        stages.append("LOWPASS 1 kHz")
+        set_state("signal", sig)
+    set_state("pipeline_stages", stages)
+    result = analyze(sig)
+    set_state("analysis", result)
+    set_state("events", detect_events(sig, method="adaptive", threshold=0.4))
+    set_state("anomalies", detect_anomalies(sig, method="zscore"))
+
+
+def render() -> None:
+    ui.pipeline_bar(get("pipeline_stages") or None)
+
+    left, center, right = st.columns([260, 1, 300], gap="medium")
+
+    with left:
+        st.markdown('<div class="sp-rail">', unsafe_allow_html=True)
+        ui.section_header("Source")
+        uploaded = st.file_uploader(
+            "Import signal", type=["wav", "csv", "json"], label_visibility="collapsed"
+        )
+        if uploaded is not None:
+            _load_upload(uploaded)
+        kind = st.selectbox("Signal type", WAVEFORMS, label_visibility="collapsed")
+        fs = st.number_input("Sampling rate (Hz)", 1_000, 96_000, 8_000, step=1_000)
+        dur = st.number_input("Duration (s)", 0.1, 10.0, 1.0, step=0.1)
+        if st.button("Generate", type="primary", use_container_width=True):
+            _generate(kind, float(fs), float(dur))
+        ui.metadata_row(f"fs={int(fs)}  dur={dur:.2f}s")
+
+        ui.section_header("Pipeline")
+        st.checkbox("FFT", value=True, key="stage_fft")
+        st.checkbox("Lowpass 1 kHz (FIR)", key="stage_lowpass")
+        if st.button("Run", type="primary", use_container_width=True):
+            _run_pipeline()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    with center:
+        sig = get("signal")
+        if sig is None:
+            ui.section_header("Time Domain")
+            st.caption("Generate or upload a signal to begin.")
+            ui.section_header("Frequency Domain")
+            return
+
+        ui.section_header("Time Domain")
+        t = np.arange(sig.n_samples) / sig.sampling_rate
+        fig = editorial_figure(height=300)
+        fig.add_trace(trace_waveform(t, sig.samples))
+        add_event_markers(fig, [ev.start_time for ev in (get("events") or [])])
+        fig.update_xaxes(title_text="time (s)")
+        fig.update_yaxes(title_text=sig.units or "amplitude")
+        st.plotly_chart(fig, use_container_width=True)
+        ui.metadata_row(
+            f"name={sig.name}  n={sig.n_samples}  "
+            f"fs={int(sig.sampling_rate)}  t0=0  t1={sig.duration:.4f}s"
+        )
+
+        ui.section_header("Frequency Domain")
+        spec = get("spectrum") or fft(sig, one_sided=True)
+        if spec is not None:
+            fig2 = editorial_figure(height=260)
+            fig2.add_trace(trace_spectrum(spec.frequencies, np.abs(spec.values)))
+            fig2.update_xaxes(title_text="frequency (Hz)")
+            fig2.update_yaxes(title_text="magnitude")
+            st.plotly_chart(fig2, use_container_width=True)
+            df = float(spec.frequencies[1]) if spec.frequencies.size > 1 else 0.0
+            ui.metadata_row(f"bins={spec.frequencies.size}  df={df:.2f}Hz")
+
+    with right:
+        st.markdown('<div class="sp-rail">', unsafe_allow_html=True)
+        ui.section_header("Analysis")
+        result = get("analysis")
+        if result is None:
+            st.caption("Run the pipeline to populate readouts.")
+        else:
+            m = result.metrics
+            ui.readout("Dominant Frequency", f"{m.get('dominant_frequency', 0):.2f}", "Hz")
+            ui.readout("RMS", f"{m.get('rms', 0):.4f}", sig.units or "")
+            ui.readout("Peak Amplitude", f"{m.get('peak', 0):.4f}", sig.units or "")
+            snr = m.get("snr_db", float("nan"))
+            ui.readout("SNR", f"{snr:.1f}", "dB", alert=snr < 10)
+        ui.section_header("Detected Events")
+        events = get("events") or []
+        ui.readout("Count", f"{len(events)}", alert=bool(events))
+        for ev in events[:3]:
+            ui.metadata_row(
+                f"{ev.start_time:.3f}s -> {ev.end_time:.3f}s  conf={ev.confidence:.2f}"
+            )
+        ui.section_header("Anomalies")
+        anomalies = get("anomalies") or []
+        ui.readout("Count", f"{len(anomalies)}", alert=bool(anomalies))
+        st.markdown('</div>', unsafe_allow_html=True)
