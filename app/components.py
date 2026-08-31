@@ -65,13 +65,8 @@ def pipeline_bar(stages: list[str] | None = None) -> None:
 
 
 def metadata_row(text: str) -> None:
-    """Small mono meta line, e.g. 'fs=8000  N=8000  t=1.000s'."""
     _html(f'<div class="sp-meta" style="font-family:var(--mono);font-size:10px;'
           f'color:var(--ink-3);letter-spacing:0.08em;margin:0.3rem 0;">{text}</div>')
-
-# ---------------------------------------------------------------------------
-# Editorial primitives (redesign) — appended, do not duplicate elsewhere
-# ---------------------------------------------------------------------------
 
 
 def render_top_nav() -> None:
