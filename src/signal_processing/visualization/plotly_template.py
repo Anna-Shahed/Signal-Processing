@@ -8,7 +8,6 @@ import plotly.graph_objects as go
 from .theme import ACCENT, EVENT, HAIRLINE, HAIRLINE_STRONG, INK, INK_2, INK_3, MONO
 
 _FONT = '"Apple Garamond", "EB Garamond", "Garamond", Georgia, serif'
-_MONO = MONO
 
 _AXIS: dict[str, Any] = {
     "showgrid": True,
@@ -18,7 +17,7 @@ _AXIS: dict[str, Any] = {
     "linecolor": HAIRLINE_STRONG,
     "linewidth": 1,
     "tickcolor": HAIRLINE_STRONG,
-    "tickfont": {"family": _MONO, "color": INK_3, "size": 10},
+    "tickfont": {"family": MONO, "color": INK_3, "size": 10},
     "titlefont": {"family": _FONT, "color": INK_2, "size": 13},
     "automargin": True,
 }
@@ -33,7 +32,7 @@ _BASE_LAYOUT: dict[str, Any] = {
     "hoverlabel": {
         "bgcolor": "#0d0d10",
         "bordercolor": HAIRLINE_STRONG,
-        "font": {"family": _MONO, "color": INK, "size": 11},
+        "font": {"family": MONO, "color": INK, "size": 11},
     },
     "xaxis": dict(_AXIS),
     "yaxis": dict(_AXIS),
@@ -83,6 +82,13 @@ def trace_spectrum(frequencies: Any, magnitudes: Any, name: str = "spectrum", co
 
 
 def chart(traces: Any, layout: dict[str, Any] | None = None, **kwargs: Any) -> go.Figure:
+    if isinstance(traces, go.Figure):
+        fig = traces
+        if layout:
+            fig.update_layout(layout)
+        if kwargs:
+            fig.update_layout(**kwargs)
+        return fig
     fig = editorial_figure(layout, **kwargs)
     if isinstance(traces, list):
         fig.add_traces(traces)
@@ -92,6 +98,7 @@ def chart(traces: Any, layout: dict[str, Any] | None = None, **kwargs: Any) -> g
 
 
 def add_event_markers(fig: go.Figure, events: Any, **kwargs: Any) -> go.Figure:
+    """Overlay event markers. Accepts Event objects, dicts, or plain numbers."""
     color = kwargs.get("color", EVENT)
     if not events:
         return fig
