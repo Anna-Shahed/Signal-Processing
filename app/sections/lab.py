@@ -6,7 +6,8 @@ import numpy as np
 import streamlit as st
 
 from app import components as ui
-from app.state import get, set as set_state
+from app.engine import run_task
+from app.state import get, reset_signal, set as set_state
 from signal_processing.analysis import analyze
 from signal_processing.analysis.anomaly import detect_anomalies
 from signal_processing.analysis.events import detect_events
@@ -22,22 +23,24 @@ WAVEFORMS = ["sine", "square", "chirp", "sine + noise"]
 
 
 def _generate(kind: str, fs: float, duration: float) -> None:
-    if kind == "sine":
-        sig = sine(440.0, amplitude=1.0, duration=duration, sampling_rate=fs)
-    elif kind == "square":
-        sig = square(110.0, amplitude=1.0, duration=duration, sampling_rate=fs)
-    elif kind == "chirp":
-        sig = chirp(100.0, 2_000.0, duration=duration, sampling_rate=fs, kind="linear")
-    else:
-        sig = composite(
-            sine(440.0, amplitude=1.0, duration=duration, sampling_rate=fs),
-            white_noise(duration, fs, amplitude=0.05, seed=42),
-        )
-    set_state("signal", sig)
-    set_state("spectrum", None)
-    set_state("analysis", None)
-    set_state("events", [])
-    set_state("anomalies", [])
+    try:
+        if kind == "sine":
+            sig = sine(440.0, amplitude=1.0, duration=duration, sampling_rate=fs)
+        elif kind == "square":
+            sig = square(110.0, amplitude=1.0, duration=duration, sampling_rate=fs)
+        elif kind == "chirp":
+            sig = chirp(100.0, 2_000.0, duration=duration, sampling_rate=fs, kind="linear")
+        else:
+            sig = composite(
+                sine(440.0, amplitude=1.0, duration=duration, sampling_rate=fs),
+                white_noise(duration, fs, amplitude=0.05, seed=42),
+            )
+        set_state("signal", sig)
+        set_state("sample_rate", float(fs))
+        reset_signal()
+        set_state("signal", sig)
+    except Exception as exc:  # noqa: BLE001
+        st.error(f"Generation failed: {exc}")
 
 
 def _load_upload(uploaded) -> None:
@@ -48,10 +51,8 @@ def _load_upload(uploaded) -> None:
         else:
             sig = read_csv(io.StringIO(uploaded.getvalue().decode("utf-8", errors="replace")))
         set_state("signal", sig)
-        set_state("spectrum", None)
-        set_state("analysis", None)
-        set_state("events", [])
-        set_state("anomalies", [])
+        reset_signal()
+        set_state("signal", sig)
     except Exception as exc:  # noqa: BLE001
         st.error(f"Could not load {uploaded.name}: {exc}")
 
@@ -59,34 +60,40 @@ def _load_upload(uploaded) -> None:
 def _run_pipeline() -> None:
     sig = get("signal")
     if sig is None:
+        st.info("Generate or upload a signal first.")
         return
-    stages: list[str] = []
-    if st.session_state.get("stage_fft"):
-        set_state("spectrum", fft(sig, one_sided=True))
-        stages.append("FFT")
-    if st.session_state.get("stage_lowpass"):
-        b = design_lowpass(64, 1_000, sig.sampling_rate, window="hamming")
-        sig = fir_filter(sig, b, zero_phase=True)
-        stages.append("LOWPASS 1 kHz")
-        set_state("signal", sig)
-    set_state("pipeline_stages", stages)
-    result = analyze(sig)
-    set_state("analysis", result)
-    set_state("events", detect_events(sig, method="adaptive", threshold=0.4))
-    set_state("anomalies", detect_anomalies(sig, method="zscore"))
+
+    def _work():
+        stages: list[str] = []
+        if st.session_state.get("stage_fft"):
+            set_state("spectrum", fft(sig, one_sided=True))
+            stages.append("FFT")
+        processed = sig
+        if st.session_state.get("stage_lowpass"):
+            b = design_lowpass(64, 1_000, sig.sampling_rate, window="hamming")
+            processed = fir_filter(sig, b, zero_phase=True)
+            stages.append("LOWPASS 1 kHz")
+        set_state("signal", processed)
+        set_state("pipeline_steps", stages)
+        result = analyze(processed)
+        set_state("analysis", result)
+        set_state("events", detect_events(processed, method="adaptive", threshold=0.4))
+        set_state("anomalies", detect_anomalies(processed, method="zscore"))
+        return result
+
+    run_task("Running pipeline", _work)
 
 
 def render() -> None:
-    ui.pipeline_bar(get("pipeline_stages") or None)
+    ui.pipeline_bar(get("pipeline_steps") or None)
 
     left, center, right = st.columns([260, 1, 300], gap="medium")
 
     with left:
         st.markdown('<div class="sp-rail">', unsafe_allow_html=True)
         ui.section_header("Source")
-        uploaded = st.file_uploader(
-            "Import signal", type=["wav", "csv", "json"], label_visibility="collapsed"
-        )
+        uploaded = st.file_uploader("Import signal", type=["wav", "csv", "json"],
+                                    label_visibility="collapsed")
         if uploaded is not None:
             _load_upload(uploaded)
         kind = st.selectbox("Signal type", WAVEFORMS, label_visibility="collapsed")
@@ -95,7 +102,6 @@ def render() -> None:
         if st.button("Generate", type="primary", use_container_width=True):
             _generate(kind, float(fs), float(dur))
         ui.metadata_row(f"fs={int(fs)}  dur={dur:.2f}s")
-
         ui.section_header("Pipeline")
         st.checkbox("FFT", value=True, key="stage_fft")
         st.checkbox("Lowpass 1 kHz (FIR)", key="stage_lowpass")
