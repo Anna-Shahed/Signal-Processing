@@ -11,9 +11,9 @@ for _p in (_REPO_ROOT / "src", _REPO_ROOT):
 import streamlit as st
 
 from app import components as ui
-from app.state import init_state
+from app.engine import run_task  
+from app.state import init_state, set as set_state
 from app.sections import analysis, docs, experiments, lab, projects
-
 
 def _ui_section_header(title: str) -> None:
     st.markdown(f'<div class="sp-section-title">{title}</div>', unsafe_allow_html=True)
@@ -44,9 +44,7 @@ def _ui_pipeline_bar(stages=None, active_index: int = -1) -> None:
         stages = ["input", "process", "analyze", "result"]
     parts = []
     for i, s in enumerate(stages):
-        parts.append(
-            f'<span class="{"stage active" if i == active_index else "stage"}">{s}</span>'
-        )
+        parts.append(f'<span class="{"stage active" if i == active_index else "stage"}">{s}</span>')
         if i < len(stages) - 1:
             parts.append('<span class="arrow">→</span>')
     st.markdown(f'<div class="sp-pipeline sp-glass">{"".join(parts)}</div>', unsafe_allow_html=True)
@@ -75,84 +73,107 @@ st.set_page_config(
     menu_items=None,
 )
 
+init_state()
+
 _css_path = Path(__file__).parent / "styles.css"
 css = _css_path.read_text(encoding="utf-8") if _css_path.exists() else ""
 st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
-# --- DESIGN SYSTEM: Apple Garamond + glass everywhere + hover/click motion ---
 st.markdown(
     """<style>
     :root {
-      --font-body: "Apple Garamond", "EB Garamond", "Garamond", Georgia, serif;
-      --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+      --glass-bg: rgba(18, 18, 24, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-blur: blur(24px) saturate(180%);
+      --radius: 18px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --ink: #e8e8ea;
+      --ink-2: #9a9aa3;
+      --ink-3: #63636e;
+      --neon-cyan: #22d3ee;
+      --neon-violet: #a78bfa;
+      --neon-emerald: #34d399;
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+              "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
     }
     html, body, .stApp, p, span, label, div, h1, h2, h3, h4 {
-      font-family: var(--font-body) !important;
-      color: #e8e8ea;
+      font-family: var(--font) !important;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
     }
-    body { font-size: 15px; letter-spacing: 0.01em; }
-    .sp-brand, .sp-section-title, .sp-readout small, .sp-metric .label,
-    .mono, code, kbd { font-family: var(--font-mono) !important; }
-    .sp-readout { font-size: 14px; line-height: 1.6; }
-    .sp-readout strong { font-weight: 600; }
-    .sp-readout.alert strong { color: #f2c879; }
+    [data-testid="stAppViewContainer"] { background: #000; }
+    .block-container { max-width: 100% !important; padding-bottom: 5rem !important; }
 
-    /* glass everywhere */
+    /* ---- kill vertical text collapse / column crush ---- */
+    .sp-section-title { white-space: nowrap !important; letter-spacing: 0.14em; }
+    [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; gap: 0.5rem; }
+    [data-testid="column"] { min-width: 0; }
+
+    /* ---- glass panels ---- */
+    .sp-glass, .sp-rail, .sp-topbar, .sp-metric, .sp-event, .sp-pipeline,
     .stButton > button, [data-testid="stDownloadButton"] button,
     .stTextInput input, [data-testid="stNumberInput"] input,
     [data-testid="stSelectbox"] div[data-baseweb="select"] > div,
-    [data-testid="stExpander"], [data-testid="stDialog"],
-    .sp-glass, .sp-metric, .sp-event, .sp-pipeline, .sp-topbar, .sp-rail {
-      background: rgba(255,255,255,0.05) !important;
-      -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
-      backdrop-filter: blur(18px) saturate(160%) !important;
-      border: 1px solid rgba(255,255,255,0.10) !important;
-      box-shadow: 0 1px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+    [data-testid="stExpander"], [data-testid="stDialog"] {
+      background: var(--glass-bg) !important;
+      -webkit-backdrop-filter: var(--glass-blur) !important;
+      backdrop-filter: var(--glass-blur) !important;
+      border: 1px solid var(--glass-border) !important;
+      border-radius: var(--radius) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
     }
-    .sp-rail { border-radius: 14px !important; padding: 0.9rem 1rem 0.6rem !important; }
+    .sp-rail { padding: 1rem; }
 
-    /* smaller buttons, bigger text, hover -> glass + bold, click -> press */
-    .stButton > button, [data-testid="stDownloadButton"] button {
-      font-family: var(--font-body) !important;
-      font-size: 14px !important;
-      padding: 0.30rem 0.9rem !important;
-      font-weight: 400 !important;
-      letter-spacing: 0.02em !important;
-      text-transform: none !important;
-      transition: all 0.18s ease !important;
-      border-radius: 10px !important;
+    /* ---- micro-interactions ---- */
+    .stButton > button, [data-testid="stDownloadButton"] button,
+    [data-testid="stExpander"], .sp-metric {
+      transition: transform 0.3s var(--ease), background 0.3s var(--ease),
+                  box-shadow 0.3s var(--ease), font-weight 0.3s var(--ease) !important;
     }
     .stButton > button:hover {
-      background: rgba(255,255,255,0.13) !important;
-      font-weight: 700 !important;
-      border-color: rgba(255,255,255,0.30) !important;
-      transform: translateY(-1px);
+      background: rgba(34, 211, 238, 0.10) !important;
+      border-color: rgba(34, 211, 238, 0.35) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
     }
-    .stButton > button:active { transform: translateY(0px); }
+    .stButton > button:active { transform: translateY(0) scale(0.98); }
 
-    /* math equations: italic bold serif with hover blurb */
-    .sp-eq {
-      font-family: var(--font-body);
-      font-style: italic;
-      font-weight: 700;
-      font-size: 16px;
-      color: #d6d6dc;
-      border-bottom: 1px dashed rgba(255,255,255,0.15);
-      cursor: help;
-      padding: 0.15rem 0.1rem;
-      transition: color 0.15s ease;
+    /* ---- typography hierarchy ---- */
+    .sp-brand, .sp-section-title, .sp-readout small, .sp-metric .label,
+    .mono, code, kbd { font-family: var(--mono) !important; letter-spacing: 0.1em; }
+    .sp-section-title { color: var(--ink-3) !important; font-size: 11px;
+                         text-transform: uppercase; border-bottom: 1px solid var(--glass-border);
+                         padding-bottom: 0.5rem; margin-bottom: 0.75rem; }
+    .sp-readout { font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+    .sp-readout strong { color: var(--ink); font-weight: 600; }
+    .sp-readout.alert strong { color: var(--neon-cyan); }
+    .sp-metric .value { color: var(--neon-cyan); font-family: var(--mono); font-size: 15px; }
+    .sp-pipeline .stage.active { color: var(--neon-emerald); border-color: var(--neon-emerald); }
+    .sp-event { border-left: 1px solid var(--neon-violet); }
+
+    /* ---- global spatial footer ---- */
+    .sp-footer {
+      position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+      padding: 0.45rem 1.3rem; border-radius: 999px; z-index: 9999;
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: var(--glass-blur);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      font-family: var(--font); font-size: 12px; color: var(--ink-3);
+      letter-spacing: 0.05em; white-space: nowrap;
+      transition: color 0.3s var(--ease);
     }
-    .sp-eq:hover { color: #ffffff; }
-    .sp-blurb { color: #9a9aa3; font-size: 13.5px; line-height: 1.55; }
+    .sp-footer:hover { color: var(--ink); }
+    .sp-footer a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--glass-border); }
+    .sp-footer a:hover { border-bottom-color: var(--ink-2); }
 
     @media (prefers-reduced-motion: reduce) {
-      .stButton > button { transition: none !important; transform: none !important; }
+      * { transition: none !important; transform: none !important; }
     }
     </style>""",
     unsafe_allow_html=True,
 )
-
-init_state()
 
 if not hasattr(ui, "render_top_nav"):
     def _fallback_top_nav() -> None:
@@ -165,28 +186,37 @@ if not hasattr(ui, "render_top_nav"):
             '<div class="sp-topbar sp-glass"><span class="sp-brand">SIGNAL LAB<span>DSP INSTRUMENT</span></span></div>',
             unsafe_allow_html=True,
         )
-        current = st.session_state.get("route", "lab")
+        current = st.session_state.get("active_tab", "lab")
         cols = st.columns(len(items))
         for col, (route, label) in zip(cols, items):
             with col:
                 if st.button(label, key=f"nav_{route}",
                              type="primary" if route == current else "secondary",
                              use_container_width=True):
-                    st.session_state["route"] = route
+                    set_state("active_tab", route)
                     st.rerun()
 
     ui.render_top_nav = _fallback_top_nav
 
 ui.render_top_nav()
 
-route = st.session_state.get("route", "lab")
-if route == "projects":
-    projects.render()
-elif route == "experiments":
-    experiments.render()
-elif route == "analysis":
-    analysis.render()
-elif route == "docs":
-    docs.render()
-else:
-    lab.render()
+try:
+    route = st.session_state.get("active_tab", "lab")
+    if route == "projects":
+        projects.render()
+    elif route == "experiments":
+        experiments.render()
+    elif route == "analysis":
+        analysis.render()
+    elif route == "docs":
+        docs.render()
+    else:
+        lab.render()
+except Exception as exc:  # noqa: BLE001
+    st.error(f"The {route or 'lab'} view failed: {exc}")
+
+st.markdown(
+    '<div class="sp-footer">@github · <a href="https://github.com/anna-shahed" '
+    'target="_blank">Anna-Shahed</a></div>',
+    unsafe_allow_html=True,
+)
