@@ -1,3 +1,5 @@
+"""Lab — the instrument workspace: source rail, time/frequency, analysis."""
+
 from __future__ import annotations
 
 import io
