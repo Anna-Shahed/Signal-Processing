@@ -1,234 +1,88 @@
 :root {
-  --bg: #000000;
-  --bg-raised: #0a0a0c;
-  --bg-panel: #0d0d10;
-  --hairline: #1a1a1e;
-  --hairline-strong: #2a2a30;
-  --ink: #e8e8ea;
-  --ink-2: #9a9aa3;
-  --ink-3: #63636e;
-  --accent: #8f9bb8;
-  --event: #f2c879;
-  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
-          "Helvetica Neue", Arial, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+  --bg-space: #07070a;
+  --glass-bg: rgba(18, 18, 26, 0.65);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.12);
+  --glass-blur: blur(24px) saturate(180%);
+  --accent-glow: 0 0 25px rgba(99, 102, 241, 0.25);
 }
 
-#MainMenu, footer, [data-testid="stHeader"],
-[data-testid="stToolbar"], [data-testid="stDecoration"],
-[data-testid="stStatusWidget"] { display: none !important; }
-
-[data-testid="stAppViewContainer"] { background: var(--bg); }
-.block-container {
-  max-width: 100% !important;
-  padding: 0 1.5rem 2rem !important;
-}
-[data-testid="stMain"] { padding-top: 0; }
-
-html, body, .stApp, p, span, label, div {
-  font-family: var(--sans);
-  color: var(--ink);
-}
-.mono, code, kbd { font-family: var(--mono); }
-
-a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--hairline-strong); }
-a:hover { color: var(--ink); border-bottom-color: var(--ink-2); }
-
-::selection { background: #2a2a30; color: var(--ink); }
-::-moz-selection { background: #2a2a30; color: var(--ink); }
-
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-thumb { background: #1e1e24; border-radius: 0; }
-::-webkit-scrollbar-track { background: #000; }
-
-.sp-topbar { display: flex; align-items: baseline; gap: 1rem;
-             padding: 1.1rem 0 0.9rem; border-bottom: 1px solid var(--hairline); }
-.sp-brand { font-family: var(--mono); font-size: 12px;
-            letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink); }
-.sp-brand span { color: var(--ink-3); margin-left: 0.6rem; letter-spacing: 0.1em; }
-
-.sp-topbar nav { display: flex; gap: 1.4rem; }
-.sp-topbar nav button {
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  color: var(--ink-2) !important;
-  font-family: var(--mono) !important;
-  font-size: 11px !important;
-  letter-spacing: 0.14em !important;
-  text-transform: uppercase !important;
-  padding: 0.35rem 0 !important;
-  text-align: left;
-}
-.sp-topbar nav button:hover { color: var(--ink) !important; }
-.sp-topbar nav button[kind="primary"], .sp-topbar nav button:focus {
-  color: var(--ink) !important;
-  border-bottom: 1px solid var(--ink-2) !important;
+html, body, [class*="css"] {
+  font-family: var(--font-sans) !important;
+  background-color: var(--bg-space) !important;
+  color: #f3f4f6 !important;
 }
 
-.sp-section { padding: 1.5rem 0 0.25rem; }
-.sp-section-title {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  border-bottom: 1px solid var(--hairline);
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-.sp-rule { border: 0; border-top: 1px solid var(--hairline); margin: 1.25rem 0; }
-
-.sp-readout { font-family: var(--mono); font-size: 12px; color: var(--ink);
-              line-height: 1.7; }
-.sp-readout small { color: var(--ink-3); font-size: 10px;
-                    letter-spacing: 0.08em; text-transform: uppercase; }
-.sp-readout strong { color: var(--ink); font-weight: 500; }
-.sp-metric { padding: 0.35rem 0; border-bottom: 1px solid var(--hairline); }
-.sp-metric .label { font-family: var(--mono); font-size: 10px;
-                    letter-spacing: 0.14em; text-transform: uppercase;
-                    color: var(--ink-3); }
-.sp-metric .value { font-family: var(--mono); font-size: 15px; color: var(--ink); }
-
-.sp-led { display: inline-block; width: 7px; height: 7px; border-radius: 50%;
-          margin-right: 0.4rem; vertical-align: middle; }
-.sp-led.ok { background: #34d399; box-shadow: 0 0 6px rgba(52, 211, 153, 0.5); }
-.sp-led.warn { background: var(--event); box-shadow: 0 0 6px rgba(242, 200, 121, 0.5); }
-.sp-led.err { background: #fb7185; box-shadow: 0 0 6px rgba(251, 113, 133, 0.5); }
-
-.sp-pipeline { display: flex; align-items: center; gap: 0.6rem;
-               flex-wrap: wrap; padding: 0.6rem 0; }
-.sp-pipeline .stage {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--ink-2);
-  border: 1px solid var(--hairline-strong); padding: 0.25rem 0.55rem;
-}
-.sp-pipeline .stage.active { color: var(--ink); border-color: var(--ink-2); }
-.sp-pipeline .arrow { color: var(--ink-3); font-family: var(--mono); }
-
-.sp-event { background: rgba(242, 200, 121, 0.06);
-            border-left: 1px solid var(--event); padding: 0.3rem 0.6rem;
-            margin: 0.3rem 0; font-family: var(--mono); font-size: 11px;
-            color: var(--ink-2); }
-
-.sp-table, .sp-api { width: 100%; border-collapse: collapse; font-size: 11px; }
-.sp-table td, .sp-table th, .sp-api td, .sp-api th {
-  border-bottom: 1px solid var(--hairline); padding: 0.4rem 0.5rem;
-  text-align: left; font-family: var(--mono); color: var(--ink-2);
-}
-.sp-table th, .sp-api th { color: var(--ink-3); letter-spacing: 0.1em;
-                           text-transform: uppercase; font-size: 10px; }
-.sp-table tr:hover td, .sp-api tr:hover td { color: var(--ink); }
-
-[data-testid="stAlert"] {
-  background: transparent !important;
-  border: none !important;
-  border-left: 1px solid var(--hairline-strong) !important;
-  border-radius: 0 !important;
-  color: var(--ink-2) !important;
-  font-size: 12px !important;
-}
-[data-testid="stCaptionContainer"] p { font-family: var(--mono) !important;
-  font-size: 10px !important; color: var(--ink-3) !important; }
-[data-testid="stCodeBlock"] {
-  background: var(--bg-raised) !important;
-  border: 1px solid var(--hairline) !important;
-  border-radius: 0 !important;
+.element-container, .stMarkdown, p, span, label, h1, h2, h3, h4 {
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  writing-mode: horizontal-tb !important;
 }
 
-.stButton > button, [data-testid="stDownloadButton"] button {
-  background: transparent !important;
-  border: 1px solid var(--hairline-strong) !important;
-  border-radius: 0 !important;
-  color: var(--ink-2) !important;
-  font-family: var(--mono) !important;
-  font-size: 11px !important;
-  letter-spacing: 0.1em !important;
-  text-transform: uppercase !important;
-  padding: 0.45rem 1rem !important;
-}
-.stButton > button:hover, [data-testid="stDownloadButton"] button:hover {
-  color: var(--ink) !important; border-color: var(--ink-2) !important;
-}
-.stTextInput input, [data-testid="stNumberInput"] input,
-[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
-  background: transparent !important;
-  border: 1px solid var(--hairline-strong) !important;
-  border-radius: 0 !important;
-  color: var(--ink) !important;
-}
-[data-testid="stSlider"] [role="slider"] {
-  background: var(--ink-2) !important; border-radius: 0 !important;
+.stApp {
+  background: radial-gradient(circle at 50% -20%, #16162c 0%, #07070a 70%) !important;
 }
 
-/* ---------- focus: 1px outline, no glow ---------------------------------- */
-*:focus-visible { outline: 1px solid var(--ink-2) !important;
-                  box-shadow: none !important; }
-
-/* ---------- expanders / dialogs / toasts de-chromed ---------------------- */
-[data-testid="stExpander"] { border: 1px solid var(--hairline) !important;
-                             border-radius: 0 !important;
-                             background: var(--bg-raised) !important; }
-[data-testid="stDialog"] { background: var(--bg-panel) !important;
-                           border: 1px solid var(--hairline-strong) !important;
-                           border-radius: 0 !important; }
-[data-testid="stToast"] { background: var(--bg-panel) !important;
-                          border: 1px solid var(--hairline-strong) !important;
-                          border-radius: 0 !important;
-                          color: var(--ink) !important; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important;
-                           transition: none !important; }
+div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"], 
+div[data-testid="stExpander"], 
+div.stMetric,
+div[data-testid="stDataFrame"] {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border: var(--glass-border) !important;
+  border-radius: 18px !important;
+  padding: 1.25rem !important;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-@media (max-width: 768px) {
-  html, body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-size-adjust: 100%;
-  }
-  .block-container { padding: 0 0.75rem 1.5rem !important; }
-  .sp-topbar { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
-  .sp-topbar nav { flex-wrap: wrap; gap: 0.6rem 1rem; }
-  [data-testid="stVerticalBlock"] > div { gap: 0.6rem !important; }
-  [data-testid="column"] { min-width: 100% !important; width: 100% !important;
-                           padding: 0 !important; }
-  .sp-pipeline { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .sp-readout { font-size: 13px; }
-  h1, h2, h3 { letter-spacing: -0.01em !important; }
+div[data-testid="stExpander"]:hover {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), var(--accent-glow) !important;
+  transform: translateY(-2px);
 }
 
-.sp-glass,
-.stButton > button,
-[data-testid="stDownloadButton"] button,
-.stTextInput input,
-[data-testid="stNumberInput"] input,
-[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
-[data-testid="stExpander"],
-[data-testid="stDialog"] {
-  background: rgba(255, 255, 255, 0.05) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
-  backdrop-filter: blur(18px) saturate(160%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
-  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.25),
-              inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+.stButton > button {
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03)) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-.stButton > button:hover,
-[data-testid="stDownloadButton"] button:hover {
-  background: rgba(255, 255, 255, 0.10) !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
+
+.stButton > button:hover {
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.08)) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5), var(--accent-glow);
 }
-.sp-topbar {
-  background: rgba(255, 255, 255, 0.04) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
-  backdrop-filter: blur(20px) saturate(160%) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  padding: 0.9rem 1rem !important;
+
+.spatial-footer {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 20, 32, 0.75);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 6px 18px;
+  border-radius: 30px;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.7);
+  z-index: 999999;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+  pointer-events: auto;
 }
-@media (prefers-reduced-motion: reduce) {
-  .sp-glass, .stButton > button, .sp-topbar {
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
+
+.spatial-footer:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(255,255,255,0.1);
 }
