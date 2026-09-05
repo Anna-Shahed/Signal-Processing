@@ -5,33 +5,38 @@ from typing import Any
 import numpy as np
 import plotly.graph_objects as go
 
-from .theme import ACCENT, EVENT, HAIRLINE, HAIRLINE_STRONG, INK, INK_2, INK_3, MONO
+FONT = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif'
+MONO = 'ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace'
 
-_FONT = '"Apple Garamond", "EB Garamond", "Garamond", Georgia, serif'
+NEON = {"cyan": "#22d3ee", "violet": "#a78bfa", "emerald": "#34d399"}
+INK = "#e8e8ea"
+INK_2 = "#9a9aa3"
+INK_3 = "#63636e"
+GRID = "rgba(255,255,255,0.05)"
 
 _AXIS: dict[str, Any] = {
     "showgrid": True,
-    "gridcolor": HAIRLINE,
-    "gridwidth": 0.6,
+    "gridcolor": GRID,
+    "gridwidth": 1,
     "zeroline": False,
-    "linecolor": HAIRLINE_STRONG,
+    "linecolor": "rgba(255,255,255,0.12)",
     "linewidth": 1,
-    "tickcolor": HAIRLINE_STRONG,
+    "tickcolor": "rgba(255,255,255,0.12)",
     "tickfont": {"family": MONO, "color": INK_3, "size": 10},
-    "titlefont": {"family": _FONT, "color": INK_2, "size": 13},
+    "titlefont": {"family": FONT, "color": INK_2, "size": 13},
     "automargin": True,
 }
 
 _BASE_LAYOUT: dict[str, Any] = {
     "template": None,
-    "paper_bgcolor": "#000000",
-    "plot_bgcolor": "#000000",
-    "font": {"family": _FONT, "color": INK, "size": 13},
+    "paper_bgcolor": "rgba(0,0,0,0)",
+    "plot_bgcolor": "rgba(0,0,0,0)",
+    "font": {"family": FONT, "color": INK, "size": 13},
     "margin": {"l": 48, "r": 16, "t": 44, "b": 40},
     "showlegend": False,
     "hoverlabel": {
-        "bgcolor": "#0d0d10",
-        "bordercolor": HAIRLINE_STRONG,
+        "bgcolor": "rgba(18,18,24,0.9)",
+        "bordercolor": "rgba(255,255,255,0.12)",
         "font": {"family": MONO, "color": INK, "size": 11},
     },
     "xaxis": dict(_AXIS),
@@ -40,18 +45,12 @@ _BASE_LAYOUT: dict[str, Any] = {
 
 
 def editorial_figure(layout: dict[str, Any] | None = None, **kwargs: Any) -> go.Figure:
-    """Styled figure. Accepts height=, width=, title= and any layout key."""
     merged = dict(_BASE_LAYOUT)
-    if kwargs.get("height") is not None:
-        merged["height"] = kwargs["height"]
-    if kwargs.get("width") is not None:
-        merged["width"] = kwargs["width"]
+    for key in ("height", "width"):
+        if kwargs.get(key) is not None:
+            merged[key] = kwargs[key]
     if kwargs.get("title"):
-        merged["title"] = {
-            "text": kwargs["title"],
-            "font": {"family": _FONT, "size": 15, "color": INK},
-            "x": 0,
-        }
+        merged["title"] = {"text": kwargs["title"], "font": {"family": FONT, "size": 15, "color": INK}, "x": 0}
     if layout:
         for key, value in layout.items():
             if isinstance(value, dict) and isinstance(merged.get(key), dict):
@@ -61,7 +60,7 @@ def editorial_figure(layout: dict[str, Any] | None = None, **kwargs: Any) -> go.
     return go.Figure(layout=merged)
 
 
-def trace_signal(t: Any, samples: Any, name: str = "signal", color: str = INK, width: float = 1.0) -> go.Scatter:
+def trace_signal(t: Any, samples: Any, name: str = "signal", color: str = NEON["cyan"], width: float = 1.4) -> go.Scatter:
     return go.Scatter(
         x=t, y=samples, mode="lines", name=name,
         line={"color": color, "width": width},
@@ -73,7 +72,7 @@ trace_time = trace_signal
 trace_waveform = trace_signal
 
 
-def trace_spectrum(frequencies: Any, magnitudes: Any, name: str = "spectrum", color: str = ACCENT, width: float = 1.0) -> go.Scatter:
+def trace_spectrum(frequencies: Any, magnitudes: Any, name: str = "spectrum", color: str = NEON["violet"], width: float = 1.4) -> go.Scatter:
     return go.Scatter(
         x=frequencies, y=magnitudes, mode="lines", name=name,
         line={"color": color, "width": width},
@@ -98,8 +97,7 @@ def chart(traces: Any, layout: dict[str, Any] | None = None, **kwargs: Any) -> g
 
 
 def add_event_markers(fig: go.Figure, events: Any, **kwargs: Any) -> go.Figure:
-    """Overlay event markers. Accepts Event objects, dicts, or plain numbers."""
-    color = kwargs.get("color", EVENT)
+    color = kwargs.get("color", NEON["emerald"])
     if not events:
         return fig
     for ev in events:
