@@ -1,22 +1,12 @@
 :root {
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
   --bg-space: #07070a;
-  --glass-bg: rgba(18, 18, 26, 0.65);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.12);
-  --glass-blur: blur(24px) saturate(180%);
-  --accent-glow: 0 0 25px rgba(99, 102, 241, 0.25);
 }
 
-html, body, [class*="css"] {
+html, body {
   font-family: var(--font-sans) !important;
   background-color: var(--bg-space) !important;
   color: #f3f4f6 !important;
-}
-
-.element-container, .stMarkdown, p, span, label, h1, h2, h3, h4 {
-  word-break: normal !important;
-  overflow-wrap: normal !important;
-  writing-mode: horizontal-tb !important;
 }
 
 .stApp {
@@ -27,38 +17,12 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"],
 div[data-testid="stExpander"], 
 div.stMetric,
 div[data-testid="stDataFrame"] {
-  background: var(--glass-bg) !important;
-  backdrop-filter: var(--glass-blur) !important;
-  border: var(--glass-border) !important;
+  background: rgba(18, 18, 26, 0.65) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 18px !important;
   padding: 1.25rem !important;
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4) !important;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-div[data-testid="stExpander"]:hover {
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), var(--accent-glow) !important;
-  transform: translateY(-2px);
-}
-
-.stButton > button {
-  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03)) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-radius: 12px !important;
-  color: #ffffff !important;
-  font-family: var(--font-sans) !important;
-  font-weight: 500 !important;
-  letter-spacing: -0.01em;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-.stButton > button:hover {
-  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.08)) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5), var(--accent-glow);
 }
 
 .spatial-footer {
@@ -66,23 +30,26 @@ div[data-testid="stExpander"]:hover {
   bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(20, 20, 32, 0.75);
+  background: rgba(20, 20, 32, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 6px 18px;
   border-radius: 30px;
   font-family: var(--font-sans);
   font-size: 0.82rem;
-  letter-spacing: -0.01em;
-  color: rgba(255, 255, 255, 0.7);
   z-index: 999999;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   transition: all 0.2s ease;
   pointer-events: auto;
 }
 
-.spatial-footer:hover {
+.spatial-footer a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.spatial-footer a:hover {
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(255,255,255,0.1);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
