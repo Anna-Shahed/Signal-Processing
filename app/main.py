@@ -16,6 +16,6 @@ except FileNotFoundError:
     pass
 
 st.markdown(
-    '<div class="spatial-footer">@github &nbsp;-&nbsp; Anna-Shahed</div>',
+    '<div class="spatial-footer"><a href="https://github.com/Anna-Shahed/Signal-Processing/tree/main" target="_blank">@github &nbsp;-&nbsp; Anna-Shahed</a></div>',
     unsafe_allow_html=True
 )
