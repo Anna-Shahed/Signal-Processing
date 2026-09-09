@@ -68,6 +68,57 @@ div[data-baseweb="select"] > div, input[type="text"], .stNumberInput input {
   border-color: rgba(255, 255, 255, 0.25) !important;
 }
 
+/* Notion-style Callout Box */
+.notion-callout {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Equation Tooltip Container */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  background: var(--surface-hover);
+  border: 1px solid var(--border-subtle);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  cursor: pointer;
+  font-family: monospace;
+}
+
+.tooltip-container .tooltip-text {
+  visibility: hidden;
+  width: 320px;
+  background-color: #1c1c1e;
+  color: #f5f5f7;
+  text-align: left;
+  border-radius: 8px;
+  padding: 10px 14px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
 /* Fixed Global Footer */
 .spatial-footer {
   position: fixed;
