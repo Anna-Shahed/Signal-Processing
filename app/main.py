@@ -11,13 +11,11 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Load pure black Apple CSS
 css_path = os.path.join("app", "styles.css")
 if os.path.exists(css_path):
     with open(css_path) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# Initialize Session State
 if "signal" not in st.session_state:
     fs = 8000
     t = np.linspace(0, 0.5, int(fs * 0.5), endpoint=False)
@@ -107,7 +105,6 @@ with tab_projects:
             </div>
             """, unsafe_allow_html=True)
             
-        # Export & Share section
         if st.button("Generate Shareable Link / Export JSON"):
             export_payload = json.dumps(st.session_state.projects, indent=2)
             st.code(export_payload, language="json")
@@ -126,7 +123,6 @@ with tab_experiments:
     with col_e2:
         if run_sweep:
             freqs = np.linspace(sweep_start, sweep_end, 200)
-            # Realistic low-pass / bandpass filter magnitude response curve (Bode plot)
             cutoff = 1000
             response = -20 * np.log10(1 + (freqs / cutoff)**(2 * resonance)) + 3
             
@@ -173,7 +169,6 @@ with tab_docs:
     st.markdown("#### System Documentation & Mathematical Specifications")
     st.markdown('<div class="notion-callout">Notion-style knowledge base breaking down foundational digital signal processing models, mathematical formulations, and software implementation details.</div>', unsafe_allow_html=True)
     
-    # Section 1: DFT
     st.markdown("##### 1. Discrete Fourier Transform (DFT)")
     st.latex(r"X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j 2\pi k n / N}")
     with st.expander("📖 Implementation & Operational Breakdown"):
@@ -185,7 +180,6 @@ with tab_docs:
         
     st.markdown("---")
     
-    # Section 2: FFT
     st.markdown("##### 2. Fast Fourier Transform (FFT)")
     st.latex(r"O(N \log N) \quad \text{Cooley-Tukey Radix-2 Algorithm}")
     with st.expander("📖 Implementation & Operational Breakdown"):
@@ -197,7 +191,6 @@ with tab_docs:
         
     st.markdown("---")
     
-    # Section 3: FIR Filter
     st.markdown("##### 3. Finite Impulse Response (FIR) Filter")
     st.latex(r"y[n] = \sum_{i=0}^{M} b_i \cdot x[n-i]")
     with st.expander("📖 Implementation & Operational Breakdown"):
@@ -207,7 +200,6 @@ with tab_docs:
         * **Use Case:** Linear phase filtering, noise suppression, and signal shaping in communication systems.
         """)
 
-# Persistent Global Footer Link
 st.markdown(
     '<div class="spatial-footer"><a href="https://github.com/Anna-Shahed/Signal-Processing/tree/main" target="_blank">@github &nbsp;-&nbsp; Anna-Shahed</a></div>',
     unsafe_allow_html=True
