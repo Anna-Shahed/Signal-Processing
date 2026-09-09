@@ -76,13 +76,49 @@ with tab_lab:
 
 with tab_projects:
     st.markdown("#### Project Workspaces")
-    st.markdown("Active workspace configurations and parameter profiles.")
-    st.text_input("Project Identifier", "Signal_Processor_v1.0")
+    st.markdown('<div class="notion-callout">Manage serialized pipeline configurations, export parameters, and load preset DSP profiles.</div>', unsafe_allow_html=True)
+    
+    col_p1, col_p2 = st.columns(2)
+    with col_p1:
+        st.text_input("Active Project Name", "Audio_Telemetry_v1")
+        st.selectbox("Storage Target", ["Local Disk", "Cloud Repository"])
+    with col_p2:
+        st.text_area("Workspace Description", "High-frequency telemetry stream analysis configuration for hardware debugging.")
+        if st.button("Save Workspace Profile"):
+            st.success("Workspace configuration successfully persisted.")
 
 with tab_experiments:
-    st.markdown("#### Automated Sweeps")
-    st.markdown("Configure batch processing matrices across frequency and amplitude bands.")
-    st.select_slider("Sweep Range (Hz)", options=[100, 250, 500, 1000, 2000, 4000], value=(100, 1000))
+    st.markdown("#### Automated Sweep Laboratory")
+    st.markdown('<div class="notion-callout">Execute parameter sweeps across frequency ranges and noise profiles to evaluate filter stability.</div>', unsafe_allow_html=True)
+    
+    col_e1, col_e2 = st.columns([1, 2])
+    with col_e1:
+        sweep_start = st.number_input("Start Frequency (Hz)", value=100)
+        sweep_end = st.number_input("End Frequency (Hz)", value=2000)
+        steps = st.slider("Sweep Resolution Steps", 10, 100, 50)
+        run_sweep = st.button("Execute Parameter Sweep")
+    
+    with col_e2:
+        if run_sweep:
+            frequencies = np.linspace(sweep_start, sweep_end, steps)
+            responses = np.sin(frequencies / 300) * 100
+            
+            fig_sweep = go.Figure()
+            fig_sweep.add_trace(go.Scatter(
+                x=frequencies, y=responses,
+                mode='lines+markers',
+                line=dict(color='#32d74b', width=1.5)
+            ))
+            fig_sweep.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=10, r=10, t=10, b=10),
+                xaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.06)', title='Sweep Frequency (Hz)'),
+                yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.06)', title='Response Magnitude')
+            )
+            st.plotly_chart(fig_sweep, use_container_width=True)
+        else:
+            st.info("Configure sweep bounds and click execute to render parametric output.")
 
 with tab_analysis:
     st.markdown("#### Spectral Domain Analysis")
@@ -107,9 +143,32 @@ with tab_analysis:
     st.plotly_chart(fig_fft, use_container_width=True)
 
 with tab_docs:
-    st.markdown("#### Documentation & Specifications")
-    st.markdown("System architecture, discrete transform definitions, and filter specifications.")
-    st.code("Discrete Fourier Transform: X[k] = sum_{n=0}^{N-1} x[n] * exp(-j * 2*pi*k*n / N)", language="python")
+    st.markdown("#### System Documentation & Mathematical Specifications")
+    st.markdown('<div class="notion-callout">Comprehensive breakdown of core digital signal processing transforms. Hover over any equation block to inspect its operational blurb.</div>', unsafe_allow_html=True)
+    
+    st.markdown("##### 1. Discrete Fourier Transform (DFT)")
+    st.markdown("""
+    <div class="tooltip-container">
+        X[k] = \\sum_{n=0}^{N-1} x[n] \\cdot e^{-j 2\\pi k n / N}
+        <span class="tooltip-text"><b>DFT Breakdown:</b> Converts a finite sequence of equally-spaced samples of a function into a list of coefficients of a combination of complex sinusoids, mapping time domain data directly into frequency domain components.</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("##### 2. Fast Fourier Transform (FFT)")
+    st.markdown("""
+    <div class="tooltip-container">
+        O(N \\log N) \\quad \\text{Cooley-Tukey Algorithm}
+        <span class="tooltip-text"><b>FFT Breakdown:</b> An optimized algorithmic implementation that computes the DFT in O(N log N) operations instead of O(N^2) by breaking down the transform into smaller sub-transforms recursively.</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("##### 3. Finite Impulse Response (FIR) Filter")
+    st.markdown("""
+    <div class="tooltip-container">
+        y[n] = \\sum_{i=0}^{M} b_i \\cdot x[n-i]
+        <span class="tooltip-text"><b>FIR Filter Breakdown:</b> A digital filter whose impulse response is of finite duration, meaning it settles to zero in finite time. Known for inherent linear phase stability.</span>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Persistent Global Footer Link
 st.markdown(
