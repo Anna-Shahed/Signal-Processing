@@ -20,7 +20,6 @@ html, body, [class*="css"] {
   background-color: var(--bg-pure) !important;
 }
 
-/* Apple Card Containers */
 div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"], 
 div[data-testid="stExpander"], 
 div.stMetric,
@@ -31,7 +30,6 @@ div[data-testid="stDataFrame"] {
   padding: 1.5rem !important;
 }
 
-/* Typography Hierarchy */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans) !important;
   font-weight: 600 !important;
@@ -44,7 +42,6 @@ p, span, label, div {
   color: var(--text-primary);
 }
 
-/* Form Controls */
 div[data-baseweb="select"] > div, input[type="text"], .stNumberInput input {
   background-color: var(--surface-hover) !important;
   border-color: var(--border-subtle) !important;
@@ -52,7 +49,6 @@ div[data-baseweb="select"] > div, input[type="text"], .stNumberInput input {
   border-radius: 8px !important;
 }
 
-/* Minimalist Buttons */
 .stButton > button {
   background: var(--surface-hover) !important;
   border: 1px solid var(--border-subtle) !important;
@@ -68,7 +64,6 @@ div[data-baseweb="select"] > div, input[type="text"], .stNumberInput input {
   border-color: rgba(255, 255, 255, 0.25) !important;
 }
 
-/* Clean Notion-style Callout Box */
 .notion-callout {
   background: var(--surface);
   border: 1px solid var(--border-subtle);
@@ -80,7 +75,6 @@ div[data-baseweb="select"] > div, input[type="text"], .stNumberInput input {
   color: var(--text-secondary);
 }
 
-/* Notion Page Section Card */
 .notion-card {
   background: var(--surface);
   border: 1px solid var(--border-subtle);
@@ -94,7 +88,6 @@ div[data-baseweb="select"] > div, input[type="text"], .stNumberInput input {
   border-color: rgba(255, 255, 255, 0.25);
 }
 
-/* Fixed Global Footer */
 .spatial-footer {
   position: fixed;
   bottom: 16px;
